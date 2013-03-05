@@ -87,7 +87,32 @@ curColName          UltimateSQLString
     BINDEXPRESSION(curTableName & curColName.Get(), pTbl{PROP:Name} & ':' & curColName.Get())
   END
 
+ 
+UltimateDB.GetFieldList                 PROCEDURE(*FILE pTbl)  !String
 
+curCol                                      LONG, AUTO
+curColCount                                 LONG, AUTO
+curColName                                  STRING(100)  !UltimateSQLString
+prefix                                      STRING(1)
+FieldList                                   STRING(10000)
+
+
+    CODE
+                                              
+    FieldList = ''
+    curColCount       = pTbl{PROP:Fields}
+    LOOP curCol = 1 TO curColCount
+        curColName      = SELF.Get_ColName(pTbl, curCol)           
+        prefix = ''
+        IF curCol > 1
+            prefix = ','
+        END
+        
+        FieldList = CLIP(FieldList) & CLIP(prefix) & curColName             !.Get())
+    END                                                      
+    
+    RETURN CLIP(FieldList)
+    
 ! -----------------------------------------------------------------------
 !!! <summary>Find field in table</summary>
 !!! <param name="Tbl">Reference to table</param>

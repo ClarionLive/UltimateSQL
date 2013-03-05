@@ -6,7 +6,7 @@
 !--------------------------
 
     INCLUDE('EQUATES.CLW')
-    INCLUDE('UltimateSQL.INC'),ONCE
+    INCLUDE('UltimateSQL.INC'),ONCE                                             7
     INCLUDE('UltimateDebug.INC'),ONCE   
     INCLUDE('UltimateSQLstring.INC'),ONCE
     INCLUDE('UltimateSQLScripts.INC'),ONCE  
@@ -30,11 +30,13 @@ TestConnectionString                    STRING(200)
   
 DatabaseConnectionString                STRING(200)
 
+eVersion                                EQUATE(2)
+
 QueryResults                            FILE,DRIVER('MSSQL','/LOGONSCREEN=FALSE,/SAVESTOREDPROC=FALSE,/IGNORETRUNCATION = TRUE'),OWNER(DatabaseConnectionString),PRE(QueryResults),CREATE,BINDABLE,THREAD
 Record                                      RECORD,PRE()
-C01                                             CSTRING(18000)
-C02                                             CSTRING(18000)
-C03                                             CSTRING(18000)
+C01                                             CSTRING(256)
+C02                                             CSTRING(256)
+C03                                             CSTRING(256)
 C04                                             CSTRING(256)
 C05                                             CSTRING(256)
 C06                                             CSTRING(256)
@@ -62,6 +64,11 @@ C27                                             CSTRING(256)
 C28                                             CSTRING(256)
 C29                                             CSTRING(256)
 C30                                             CSTRING(256)
+C31                                             CSTRING(256)
+C32                                             CSTRING(256)
+C33                                             CSTRING(256)
+C34                                             CSTRING(256)
+C35                                             CSTRING(256)
                                             END
                                         END    
 
@@ -234,7 +241,8 @@ ProcedureReturn                         ROUTINE
     pPassword = ThePassword  
   
     SELF.SetQueryConnection(TheResult) 
-    SELF.ConnectionString = TheResult
+    SELF.ConnectionString = TheResult    
+    SELF.FullConnectionString = 'Server=' & CLIP(pServer) & ';Database=' & CLIP(TheDatabase) & ';Uid=' & CLIP(TheUserName) & ';Pwd=' & CLIP(ThePassword) & ';'
         
     RETURN TheResult
     
@@ -468,7 +476,9 @@ UltimateSQL.SetQueryConnection          PROCEDURE(STRING pOwnerName,<STRING pQue
 
 szSQL                                       CSTRING(501)
 
-    CODE	       
+    CODE	  
+    us_ud.DebugOff = FALSE
+    us_ud.DebugPrefix = '!'
     SELF.TheDatabaseConnectionString = pOwnerName  
     DatabaseConnectionString = pOwnerName
     IF pQueryTableName = ''
@@ -477,6 +487,16 @@ szSQL                                       CSTRING(501)
     SELF.QueryTableName = pQueryTableName          
     SELF.CheckQueryTableExists(DatabaseConnectionString)
     QueryResults{PROP:LogonScreen}=FALSE   
+    
+    IF SELF.ColumnExists(SELF.QueryTableName,'C31')       
+    ELSE                                                
+        SELF.AddColumn(SELF.QueryTableName,'C31','VarChar',255)
+        SELF.AddColumn(SELF.QueryTableName,'C32','VarChar',255)
+        SELF.AddColumn(SELF.QueryTableName,'C33','VarChar',255)
+        SELF.AddColumn(SELF.QueryTableName,'C34','VarChar',255)
+        SELF.AddColumn(SELF.QueryTableName,'C35','VarChar',255)
+    END
+    
          
         
         
@@ -513,7 +533,7 @@ Result                                      STRING(500)
     Result = ''
     SELF.Query(pQuery,,Result)
 
-    RETURN Result 
+    RETURN CLIP(Result)
         
 
 UltimateSQL.SetCatalog                  FUNCTION (STRING pCatalog)   !,STRING 
@@ -529,12 +549,12 @@ Result                                      STRING(500)
 
     RETURN       
                  
-UltimateSQL.Query                       FUNCTION (STRING pQuery, <*QUEUE pQ>, <*? pC1>, <*? pC2>, <*? pC3>, <*? pC4>, <*? pC5>, <*? pC6>, <*? pC7>, <*? pC8>, <*? pC9>, <*? pC10>, <*? pC11>, <*? pC12>, <*? pC13>, <*? pC14>, <*? pC15>, <*? pC16>, <*? pC17>,<*? pC18>, <*? pC19>, <*? pC20>, <*? pC21>, <*? pC22>, <*? pC23>, <*? pC24>, <*? pC25>, <*? pC26>, <*? pC27>, <*? pC28>, <*? pC29>, <*? pC30>)  !,BYTE,PROC
+UltimateSQL.Query                       FUNCTION (STRING pQuery, <*QUEUE pQ>, <*? pC1>, <*? pC2>, <*? pC3>, <*? pC4>, <*? pC5>, <*? pC6>, <*? pC7>, <*? pC8>, <*? pC9>, <*? pC10>, <*? pC11>, <*? pC12>, <*? pC13>, <*? pC14>, <*? pC15>, <*? pC16>, <*? pC17>,<*? pC18>, <*? pC19>, <*? pC20>, <*? pC21>, <*? pC22>, <*? pC23>, <*? pC24>, <*? pC25>, <*? pC26>, <*? pC27>, <*? pC28>, <*? pC29>, <*? pC30>, <*? pC31>, <*? pC32>, <*? pC33>, <*? pC34>, <*? pC35>)  !,BYTE,PROC
 
     CODE
     Execute SELF.QueryMethod
-        RETURN SELF.QueryDummy(pQuery,pQ,pC1,pC2,pC3,pC4,pC5,pC6,pC7,pC8,pC9,pC10,pC11,pC12,pC13,pC14,pC15,pC16,pC17,pC18,pC19,pC20,pC21,pC22,pC23,pC24,pC25,pC26,pC27,pC28,pC29,pC30)  !,BYTE,PROC
-        RETURN SELF.QueryODBC(pQuery,pQ,pC1,pC2,pC3,pC4,pC5,pC6,pC7,pC8,pC9,pC10,pC11,pC12,pC13,pC14,pC15,pC16,pC17,pC18,pC19,pC20,pC21,pC22,pC23,pC24,pC25,pC26,pC27,pC28,pC29,pC30)  !,BYTE,PROC
+        RETURN SELF.QueryDummy(pQuery,pQ,pC1,pC2,pC3,pC4,pC5,pC6,pC7,pC8,pC9,pC10,pC11,pC12,pC13,pC14,pC15,pC16,pC17,pC18,pC19,pC20,pC21,pC22,pC23,pC24,pC25,pC26,pC27,pC28,pC29,pC30,pC31,pC32,pC33,pC34,pC35)  !,BYTE,PROC
+        RETURN SELF.QueryODBC(pQuery,pQ,pC1,pC2,pC3,pC4,pC5,pC6,pC7,pC8,pC9,pC10,pC11,pC12,pC13,pC14,pC15,pC16,pC17,pC18,pC19,pC20,pC21,pC22,pC23,pC24,pC25,pC26,pC27,pC28,pC29,pC30,pC31,pC32,pC33,pC34,pC35)  !,BYTE,PROC
     END
 
         
@@ -545,7 +565,7 @@ UltimateSQL.Query                       FUNCTION (STRING pQuery, <*QUEUE pQ>, <*
 !!! <param name="Q">A Queue to receive Query results.  This is optional if you are only receiving a single row.</param>        
 !!! <param name="C1...C30">Variables belonging to the passed Queue, or stand-alone variables to reeive a single result.</param>        
 ! -----------------------------------------------------------------------
-UltimateSQL.QueryDummy                       FUNCTION (STRING pQuery, <*QUEUE pQ>, <*? pC1>, <*? pC2>, <*? pC3>, <*? pC4>, <*? pC5>, <*? pC6>, <*? pC7>, <*? pC8>, <*? pC9>, <*? pC10>, <*? pC11>, <*? pC12>, <*? pC13>, <*? pC14>, <*? pC15>, <*? pC16>, <*? pC17>,<*? pC18>, <*? pC19>, <*? pC20>, <*? pC21>, <*? pC22>, <*? pC23>, <*? pC24>, <*? pC25>, <*? pC26>, <*? pC27>, <*? pC28>, <*? pC29>, <*? pC30>)  !,BYTE,PROC
+UltimateSQL.QueryDummy                       FUNCTION (STRING pQuery, <*QUEUE pQ>, <*? pC1>, <*? pC2>, <*? pC3>, <*? pC4>, <*? pC5>, <*? pC6>, <*? pC7>, <*? pC8>, <*? pC9>, <*? pC10>, <*? pC11>, <*? pC12>, <*? pC13>, <*? pC14>, <*? pC15>, <*? pC16>, <*? pC17>,<*? pC18>, <*? pC19>, <*? pC20>, <*? pC21>, <*? pC22>, <*? pC23>, <*? pC24>, <*? pC25>, <*? pC26>, <*? pC27>, <*? pC28>, <*? pC29>, <*? pC30>, <*? pC31>, <*? pC32>, <*? pC33>, <*? pC34>, <*? pC35>)  !,BYTE,PROC
 
 
 
@@ -650,6 +670,11 @@ SendToDebug                                 BYTE(0)
                             BIND(CLIP(BindVarQ.Name),pC28)
                             BIND(CLIP(BindVarQ.Name),pC29)
                             BIND(CLIP(BindVarQ.Name),pC30)
+                            BIND(CLIP(BindVarQ.Name),pC31)
+                            BIND(CLIP(BindVarQ.Name),pC32)
+                            BIND(CLIP(BindVarQ.Name),pC33)
+                            BIND(CLIP(BindVarQ.Name),pC34)
+                            BIND(CLIP(BindVarQ.Name),pC35)
                         END
                     END
 
@@ -773,6 +798,11 @@ SendToDebug                                 BYTE(0)
                                 IF NOT OMITTED(pC28) THEN pC28 = QueryResults:C28.
                                 IF NOT OMITTED(pC29) THEN pC29 = QueryResults:C29.
                                 IF NOT OMITTED(pC30) THEN pC30 = QueryResults:C30.
+                                IF NOT OMITTED(pC31) THEN pC31 = QueryResults:C31.
+                                IF NOT OMITTED(pC32) THEN pC32 = QueryResults:C32.
+                                IF NOT OMITTED(pC33) THEN pC33 = QueryResults:C33.
+                                IF NOT OMITTED(pC34) THEN pC34 = QueryResults:C34.
+                                IF NOT OMITTED(pC35) THEN pC35 = QueryResults:C35.
 								
                                 IF NOT OMITTED(pq) ! Result Queue
                                     ADD(ResultQ)
@@ -836,7 +866,7 @@ SendToDebug                                 BYTE(0)
     POPBIND
     RETURN ExecOK    
         
-UltimateSQL.QueryODBC                       FUNCTION (STRING pQuery, <*QUEUE pQ>, <*? pC1>, <*? pC2>, <*? pC3>, <*? pC4>, <*? pC5>, <*? pC6>, <*? pC7>, <*? pC8>, <*? pC9>, <*? pC10>, <*? pC11>, <*? pC12>, <*? pC13>, <*? pC14>, <*? pC15>, <*? pC16>, <*? pC17>,<*? pC18>, <*? pC19>, <*? pC20>, <*? pC21>, <*? pC22>, <*? pC23>, <*? pC24>, <*? pC25>, <*? pC26>, <*? pC27>, <*? pC28>, <*? pC29>, <*? pC30>)  !,BYTE,PROC
+UltimateSQL.QueryODBC                       FUNCTION (STRING pQuery, <*QUEUE pQ>, <*? pC1>, <*? pC2>, <*? pC3>, <*? pC4>, <*? pC5>, <*? pC6>, <*? pC7>, <*? pC8>, <*? pC9>, <*? pC10>, <*? pC11>, <*? pC12>, <*? pC13>, <*? pC14>, <*? pC15>, <*? pC16>, <*? pC17>,<*? pC18>, <*? pC19>, <*? pC20>, <*? pC21>, <*? pC22>, <*? pC23>, <*? pC24>, <*? pC25>, <*? pC26>, <*? pC27>, <*? pC28>, <*? pC29>, <*? pC30>, <*? pC31>, <*? pC32>, <*? pC33>, <*? pC34>, <*? pC35>)  !,BYTE,PROC
 
 ExecOK                                      BYTE(0)
 lCnt                                        long
@@ -934,6 +964,11 @@ ViewResults                                 UltimateSQLResultsViewClass
                     IF NOT OMITTED(PC28);pC28 = DirectODBC.GetColumnValue(lRowCnt,28) END
                     IF NOT OMITTED(PC29);pC29 = DirectODBC.GetColumnValue(lRowCnt,29) END
                     IF NOT OMITTED(PC30);pC30 = DirectODBC.GetColumnValue(lRowCnt,30) END
+                    IF NOT OMITTED(PC31);pC31 = DirectODBC.GetColumnValue(lRowCnt,31) END
+                    IF NOT OMITTED(PC32);pC32 = DirectODBC.GetColumnValue(lRowCnt,32) END
+                    IF NOT OMITTED(PC33);pC33 = DirectODBC.GetColumnValue(lRowCnt,33) END
+                    IF NOT OMITTED(PC34);pC34 = DirectODBC.GetColumnValue(lRowCnt,34) END
+                    IF NOT OMITTED(PC35);pC35 = DirectODBC.GetColumnValue(lRowCnt,35) END
                     IF NOT OMITTED(pq)
                         ADD(pQ)    
                     ELSE 
@@ -1037,7 +1072,7 @@ Catalog                                     STRING(200)
 Result                                      LONG
 
     CODE
-        
+    
     Catalog = pCatalog
     Schema = pSchema
     IF Catalog = ''
@@ -1047,10 +1082,10 @@ Result                                      LONG
         Schema = 'dbo'
     END
     RETURN SELF.QUERYResult('SELECT count(*) FROM INFORMATION_SCHEMA.COLUMNS' & |  
-        ' WHERE TABLE_CATALOG = ' & SELF.Quote(Catalog) & |
-        ' AND TABLE_SCHEMA = ' & SELF.Quote(Schema) & | 
-        ' AND TABLE_NAME = ' & SELF.Quote(pTable) & |
-        ' AND COLUMN_NAME = ' & SELF.Quote(pColumn))    
+        ' WHERE TABLE_CATALOG = ' & CLIP(SELF.Quote(Catalog)) & |
+        ' AND TABLE_SCHEMA = ' & CLIP(SELF.Quote(Schema)) & | 
+        ' AND TABLE_NAME = ' & CLIP(SELF.Quote(pTable)) & |
+        ' AND COLUMN_NAME = ' & CLIP(SELF.Quote(pColumn)))    
         
           
         
@@ -1280,7 +1315,16 @@ oUltimateDB                                   UltimateDB
 
     oUltimateDB.SQLFetchChildren(pKey,pSelect)   
         
-    RETURN
+    RETURN      
+    
+UltimateSQL.RenameColumn                PROCEDURE(STRING pTable,STRING pOldColumn,STRING pNewColumn)          !,LONG,PROC  
+
+    CODE
+    
+    RETURN SELF.Query('sp_RENAME ' & SELF.Quote(CLIP(pTable) & '.' & CLIP(pOldColumn)) & ', ' & SELF.Quote(pNewColumn) & ', <39>COLUMN<39>')
+    
+    
+    
         
         
 ! -----------------------------------------------------------------------

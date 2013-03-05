@@ -78,7 +78,9 @@ QueryTableName                              STRING(200),PRIVATE
 
 TheDatabaseConnectionString                 STRING(200) 
 Catalog                                     STRING(200),PRIVATE  
-ConnectionString                            STRING(200)   
+ConnectionString                            STRING(200)  
+FullConnectionString                        STRING(200)
+
 
 
 _Driver                                     LONG,PROTECTED            ! 0 = Sybase, 1 = MS SQL 
@@ -158,6 +160,8 @@ HandleError                                 PROCEDURE(LONG pErrorCode,STRING pEr
 ProcessScript                               PROCEDURE(STRING pScript),BYTE,PROC
 Quote                                       PROCEDURE(STRING pText), STRING     
 Records                                     PROCEDURE(*FILE pFile,<STRING pFilter>),LONG
+RenameColumn                                  PROCEDURE(STRING pTable,STRING pOldColumn,STRING pNewColumn),LONG,PROC
+
 RemoveIllegalCharacters                     PROCEDURE(String pString),STRING
 SendDriverString                            PROCEDURE(STRING pMessage),STRING,PROC 
 Set                                         PROCEDURE(*KEY pKey, <STRING pSelect>, BYTE pReverse=False)
@@ -180,9 +184,9 @@ Destruct                                    PROCEDURE()
 Init                                        PROCEDURE()  
 Kill                                        PROCEDURE()
 
-Query                                       FUNCTION (STRING pQuery, <*QUEUE pQ>, <*? pC1>, <*? pC2>, <*? pC3>, <*? pC4>, <*? pC5>, <*? pC6>, <*? pC7>, <*? pC8>, <*? pC9>, <*? pC10>, <*? pC11>, <*? pC12>, <*? pC13>, <*? pC14>, <*? pC15>, <*? pC16>, <*? pC17>,<*? pC18>, <*? pC19>, <*? pC20>, <*? pC21>, <*? pC22>, <*? pC23>, <*? pC24>, <*? pC25>, <*? pC26>, <*? pC27>, <*? pC28>, <*? pC29>, <*? pC30>),BYTE,PROC
-QueryDummy                                  FUNCTION (STRING pQuery, <*QUEUE pQ>, <*? pC1>, <*? pC2>, <*? pC3>, <*? pC4>, <*? pC5>, <*? pC6>, <*? pC7>, <*? pC8>, <*? pC9>, <*? pC10>, <*? pC11>, <*? pC12>, <*? pC13>, <*? pC14>, <*? pC15>, <*? pC16>, <*? pC17>,<*? pC18>, <*? pC19>, <*? pC20>, <*? pC21>, <*? pC22>, <*? pC23>, <*? pC24>, <*? pC25>, <*? pC26>, <*? pC27>, <*? pC28>, <*? pC29>, <*? pC30>),BYTE,PROC
-QueryODBC                                   FUNCTION (STRING pQuery, <*QUEUE pQ>, <*? pC1>, <*? pC2>, <*? pC3>, <*? pC4>, <*? pC5>, <*? pC6>, <*? pC7>, <*? pC8>, <*? pC9>, <*? pC10>, <*? pC11>, <*? pC12>, <*? pC13>, <*? pC14>, <*? pC15>, <*? pC16>, <*? pC17>,<*? pC18>, <*? pC19>, <*? pC20>, <*? pC21>, <*? pC22>, <*? pC23>, <*? pC24>, <*? pC25>, <*? pC26>, <*? pC27>, <*? pC28>, <*? pC29>, <*? pC30>),BYTE,PROC
+Query                                       FUNCTION (STRING pQuery, <*QUEUE pQ>, <*? pC1>, <*? pC2>, <*? pC3>, <*? pC4>, <*? pC5>, <*? pC6>, <*? pC7>, <*? pC8>, <*? pC9>, <*? pC10>, <*? pC11>, <*? pC12>, <*? pC13>, <*? pC14>, <*? pC15>, <*? pC16>, <*? pC17>,<*? pC18>, <*? pC19>, <*? pC20>, <*? pC21>, <*? pC22>, <*? pC23>, <*? pC24>, <*? pC25>, <*? pC26>, <*? pC27>, <*? pC28>, <*? pC29>, <*? pC30>, <*? pC31>, <*? pC32>, <*? pC33>, <*? pC34>, <*? pC35>),BYTE,PROC
+QueryDummy                                  FUNCTION (STRING pQuery, <*QUEUE pQ>, <*? pC1>, <*? pC2>, <*? pC3>, <*? pC4>, <*? pC5>, <*? pC6>, <*? pC7>, <*? pC8>, <*? pC9>, <*? pC10>, <*? pC11>, <*? pC12>, <*? pC13>, <*? pC14>, <*? pC15>, <*? pC16>, <*? pC17>,<*? pC18>, <*? pC19>, <*? pC20>, <*? pC21>, <*? pC22>, <*? pC23>, <*? pC24>, <*? pC25>, <*? pC26>, <*? pC27>, <*? pC28>, <*? pC29>, <*? pC30>, <*? pC31>, <*? pC32>, <*? pC33>, <*? pC34>, <*? pC35>),BYTE,PROC
+QueryODBC                                   FUNCTION (STRING pQuery, <*QUEUE pQ>, <*? pC1>, <*? pC2>, <*? pC3>, <*? pC4>, <*? pC5>, <*? pC6>, <*? pC7>, <*? pC8>, <*? pC9>, <*? pC10>, <*? pC11>, <*? pC12>, <*? pC13>, <*? pC14>, <*? pC15>, <*? pC16>, <*? pC17>,<*? pC18>, <*? pC19>, <*? pC20>, <*? pC21>, <*? pC22>, <*? pC23>, <*? pC24>, <*? pC25>, <*? pC26>, <*? pC27>, <*? pC28>, <*? pC29>, <*? pC30>, <*? pC31>, <*? pC32>, <*? pC33>, <*? pC34>, <*? pC35>),BYTE,PROC
 QueryResult                                 FUNCTION (STRING pQuery),STRING
 
 ExtendedProperty_Insert                     PROCEDURE(STRING pObjectName,STRING pPropertyName,STRING pPropertyValue), LONG, PROC

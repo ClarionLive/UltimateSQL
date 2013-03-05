@@ -59,7 +59,8 @@ GetError                        PROCEDURE(), STRING
 GetKey                          PROCEDURE(*FILE pTbl, STRING pKey), *KEY
 Get_ColName                     PROCEDURE(*FILE pTbl, LONG pInstance), STRING 
 GetColData                      PROCEDURE(*FILE pTbl, LONG pInstance, <LONG pDriver>), STRING
-Get_Driver                      PROCEDURE(), LONG
+Get_Driver                      PROCEDURE(), LONG   
+GetFieldList                    PROCEDURE(*FILE pTbl),String
 Get_ConnectionString            PROCEDURE(), STRING
 IsReadOnly                      PROCEDURE(*FILE pTbl, LONG pInstance), BYTE  
 Quote                           PROCEDURE(STRING pText), STRING
