@@ -147,12 +147,13 @@ hresult                                     Short
 
     Code
         
-        if self.hstmt
+      if self.hstmt
             hresult = usd_SQLFreeHandle(UltimateSQL_HANDLE_STMT, self.hstmt)
             If hresult <> UltimateSQL_SUCCESS AND hresult <> UltimateSQL_SUCCESS_WITH_INFO
-                Self.GetLastError(UltimateSQL_HANDLE_ENV,self.henv)
+               Self.GetLastError(UltimateSQL_HANDLE_ENV,self.henv)
             End
-        END
+         Clear(self.hstmt)
+      END
 
       if self.hdbc
          hresult = usd_SQLDisconnect(self.hdbc)
@@ -164,7 +165,7 @@ hresult                                     Short
          If hresult <> UltimateSQL_SUCCESS AND hresult <> UltimateSQL_SUCCESS_WITH_INFO
             Self.GetLastError(UltimateSQL_HANDLE_dbc,self.hdbc)    
          End
-         Clear(self.hstmt)
+         Clear(self.hdbc)
       END
       if self.henv and self.FreeHenv
          hresult = usd_SQLFreeHandle(UltimateSQL_HANDLE_ENV,self.henv)
