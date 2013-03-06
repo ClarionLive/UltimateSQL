@@ -15,14 +15,10 @@
                                             END 
                                         END
 
-<<<<<<< HEAD
   INCLUDE('UltimateSQLString.inc'), ONCE
-=======
-    INCLUDE('UltimateSQLString.inc'), ONCE
     include('ultimatedebug.inc'),ONCE
 
 ud                                      UltimateDebug
->>>>>>> New GETFIELDS method added
 
 
 ! -----------------------------------------------------------------------
@@ -134,63 +130,6 @@ curVal2             LONG, AUTO
 curText             BYTE(False)
 curDriver           LONG, AUTO
 
-<<<<<<< HEAD
-  CODE
-  IF OMITTED(2)
-    curDriver       = SELF._Driver
-  ELSE
-    curDriver       = pDriver
-  END
-  CASE curDriver
-  OF uss_Driver_SyBase              !! Sybase
-    CLEAR(curInstance)
-    LOOP
-      curInstance   += 1
-      IF curInstance > LEN(SELF.Value)
-        BREAK
-      END
-      curChar       = SELF.Value[curInstance : curInstance]
-      IF curChar < ' ' |
-      OR INSTRING(curChar, '''\')
-        curVal1 = BSHIFT(BAND(VAL(curChar), 11110000b), -4) + 1
-        curVal2 = BAND(VAL(curChar), 00001111b) + 1
-        SELF.Assign(SUB(SELF.Value, 1, curInstance-1) & |
-          '\x' & curValues[curVal1 : curVal1] & curValues[curVal2 : curVal2] & |
-          SUB(SELF.Value, curInstance+1, LEN(SELF.Value)-curInstance))
-        curInstance += 3
-      END
-    END
-    SELF.PreAppend('''')
-    SELF.Append('''')
-  OF uss_Driver_MSSQL              !! MS SQL
-    CLEAR(curInstance)
-    LOOP
-      curInstance   += 1
-      IF curInstance > LEN(SELF.Value)
-        BREAK
-      END
-      curChar       = SELF.Value[curInstance : curInstance]
-      IF curChar < ' ' |
-      OR curChar = ''''
-        curAssign   = 'CHAR(' & VAL(curChar) & ')'
-        IF curText
-          SELF.Assign(SELF.Value[1 : curInstance-1] & |
-            '''' & |
-            SELF.Value[curInstance : LEN(SELF.Value)])
-          curText   = False
-          curInstance += 1
-        END
-        IF curInstance > 1
-          SELF.Assign(SELF.Value[1 : curInstance-1] & |
-            '+' & curAssign & |
-            SELF.Value[curInstance+1 : LEN(SELF.Value)])
-          curInstance += LEN(curAssign)
-        ELSE
-          SELF.Assign(SELF.Value[1 : curInstance-1] & |
-            curAssign & |
-            SELF.Value[curInstance+1 : LEN(SELF.Value)])
-          curInstance += (LEN(curAssign) - 1)
-=======
     CODE 
 !    ud.DebugOff = FALSE
 !    ud.DebugPrefix = '!'
@@ -201,7 +140,7 @@ curDriver           LONG, AUTO
     END
     ud.Debug('driver ' & curDriver)
     CASE curDriver
-    OF 0              !! Sybase
+    OF uss_Driver_SyBase              !! Sybase
         CLEAR(curInstance)
         LOOP
             curInstance   += 1
@@ -221,7 +160,7 @@ curDriver           LONG, AUTO
         END
         SELF.PreAppend('''')
         SELF.Append('''')
-    OF 1              !! MS SQL
+    OF uss_Driver_MSSQL              !! MS SQL
         CLEAR(curInstance)                 
         LOOP
             curInstance   += 1   
@@ -269,39 +208,18 @@ curDriver           LONG, AUTO
                 END        
                 curText     = True
             END
->>>>>>> New GETFIELDS method added
         END
-      ELSIF ~curText
-        IF curInstance > 1
-          SELF.Assign(SELF.Value[1 : curInstance-1] & |
-            '+''' & |
-            SELF.Value[curInstance : LEN(SELF.Value)])
-          curInstance += 2
-        ELSE
-          SELF.Assign(SELF.Value[1 : curInstance-1] & |
-            '''' & |
-            SELF.Value[curInstance : LEN(SELF.Value)])
-          curInstance += 1
+        IF curText
+           SELF.Append('''')
+        ELSIF SELF.Length() = 0
+          SELF.Assign('''''')
         END
-        curText     = True
-      END
-    END
-    IF curText
-      SELF.Append('''')
-    ELSIF SELF.Length() = 0
-      SELF.Assign('''''')
-    END
         
         SELF.Replace('CHR(','char(')
-<<<<<<< HEAD
-  END
-  RETURN
-=======
     END  
     ud.Debug('val ' & SELF.Value)
     
     RETURN
->>>>>>> New GETFIELDS method added
 
 
 ! -----------------------------------------------------------------------

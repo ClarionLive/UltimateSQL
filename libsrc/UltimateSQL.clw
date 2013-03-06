@@ -6,7 +6,7 @@
 !--------------------------
 
     INCLUDE('EQUATES.CLW')
-    INCLUDE('UltimateSQL.INC'),ONCE                                             7
+    INCLUDE('UltimateSQL.INC'),ONCE                                             
     INCLUDE('UltimateDebug.INC'),ONCE   
     INCLUDE('UltimateSQLstring.INC'),ONCE
     INCLUDE('UltimateSQLScripts.INC'),ONCE  
