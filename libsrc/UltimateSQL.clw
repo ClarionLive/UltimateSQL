@@ -32,7 +32,7 @@ DatabaseConnectionString                STRING(200)
 
 eVersion                                EQUATE(2)
 
-QueryResults                            FILE,DRIVER('MSSQL','/LOGONSCREEN=FALSE,/SAVESTOREDPROC=FALSE,/IGNORETRUNCATION = TRUE'),OWNER(DatabaseConnectionString),PRE(QueryResults),CREATE,BINDABLE,THREAD
+QueryResults                            FILE,DRIVER('MSSQL','/TURBOSQL=True /LOGONSCREEN=FALSE,/SAVESTOREDPROC=FALSE,/IGNORETRUNCATION = TRUE'),OWNER(DatabaseConnectionString),PRE(QueryResults),BINDABLE,THREAD
 Record                                      RECORD,PRE()
 C01                                             CSTRING(256)
 C02                                             CSTRING(256)
@@ -95,9 +95,9 @@ Scripts                                     UltimateSQLScripts
     IF SELF.QueryTableName = ''
         SELF.QueryTableName = 'Queries'
     END
-    IF ~SELF.TableExists(SELF.QueryTableName)  
-        SELF.QueryODBC(Scripts.CreateQueryTable())
-    END
+!!    IF ~SELF.TableExists(SELF.QueryTableName)  
+!!        SELF.QueryODBC(Scripts.CreateQueryTable())
+!!    END
     SELF.QueryMethod = SavedQueryMethod
 
 
@@ -134,43 +134,60 @@ Name                                            STRING(512)
 Scripts                                     UltimateSQLScripts
 
 Window                                      WINDOW('Connect'),AT(,,364,165),CENTER,GRAY,FONT('MS Sans Serif',8)
-                                                PANEL,AT(18,14,322,105),USE(?PANEL1),BEVEL(1)
-                                                COMBO(@s200),AT(85,25,224,12),USE(TheServer),VSCROLL,DROP(10),FROM(SQLServers), |
-                                                    FORMAT('1020L(2)@s255@')
-                                                LIST,AT(85,42,224,11),USE(?LISTAuthentication),DROP(2),FROM('Windows Aut' & |
-                                                    'hentication|SQL Server Authentication')
-                                                ENTRY(@s200),AT(85,58,224),USE(TheUserName) 
-                                                ENTRY(@s200),AT(85,76,224),USE(ThePassword),PASSWORD
-                                                COMBO(@s200),AT(85,93,224,12),USE(TheDatabase),VSCROLL,DROP(10), |
-                                                    FROM(SQLDatabases),FORMAT('1020L(2)|M@s255@')
-                                                BUTTON('OK'),AT(201,131,65,21),USE(?OkButton),DEFAULT
-                                                BUTTON('Cancel'),AT(271,131,69,21),USE(?CancelButton)
-                                                STRING('Username:'),AT(46,62),USE(?STRING3)
-                                                STRING('Database:'),AT(47,96),USE(?STRING2)
-                                                STRING('Server Host:'),AT(41,28),USE(?STRING1)
-                                                STRING('Password:'),AT(47,79),USE(?STRING4)
-                                                STRING('Authentication:'),AT(33,44),USE(?STRING5)
-                                                BUTTON('Test'),AT(18,131,65,21),USE(?BUTTONTest)
+                                                SHEET,AT(2,2,360,161),USE(?SHEET1)
+                                                    TAB('Tab1'),USE(?TAB1)
+                                                        PANEL,AT(29,28,301,99),USE(?PANEL2),BEVEL(1)
+                                                        STRING('Connecting to Server....'),AT(101,62),USE(?STRING6), |
+                                                            FONT('Arial',14,,FONT:bold+FONT:italic)
+                                                    END
+                                                    TAB('Tab2'),USE(?TAB2)
+                                                        PANEL,AT(18,14,322,105),USE(?PANEL1),BEVEL(1)
+                                                        COMBO(@s200),AT(85,25,224,12),USE(TheServer),VSCROLL,DROP(10), |
+                                                            FROM(SQLServers),FORMAT('1020L(2)@s255@')
+                                                        LIST,AT(85,42,224,11),USE(?LISTAuthentication),DROP(2), |
+                                                            FROM('Windows Authentication|SQL Server Authentication')
+                                                        ENTRY(@s200),AT(85,58,224),USE(TheUserName)
+                                                        ENTRY(@s200),AT(85,76,224),USE(ThePassword),PASSWORD
+                                                        COMBO(@s200),AT(85,93,224,12),USE(TheDatabase),VSCROLL,DROP(10), |
+                                                            FROM(SQLDatabases),FORMAT('1020L(2)|M@s255@')
+                                                        BUTTON('OK'),AT(201,131,65,21),USE(?OkButton),DEFAULT
+                                                        BUTTON('Cancel'),AT(271,131,69,21),USE(?CancelButton)
+                                                        STRING('Username:'),AT(46,62),USE(?STRING3)
+                                                        STRING('Database:'),AT(47,96),USE(?STRING2)
+                                                        STRING('Server Host:'),AT(41,28),USE(?STRING1)
+                                                        STRING('Password:'),AT(47,79),USE(?STRING4)
+                                                        STRING('Authentication:'),AT(33,44),USE(?STRING5)
+                                                        BUTTON('Test'),AT(18,131,65,21),USE(?BUTTONTest)
+                                                    END
+                                                END
                                             END
     CODE
+    us_ud.DebugOff = False
+    us_ud.DebugPrefix = '!'
     
     TheServer = pServer
     TheDatabase = pDatabase
     TheUserName = pUserName
     ThePassword = pPassword    
-        
+    OPEN(Window)              
+    0{PROP:Hide} = TRUE
+    ?SHEET1{PROP:Wizard} = TRUE
+    SETCURSOR(CURSOR:Wait)   
+    DISPLAY()
     IF TheServer AND TheDatabase  
-        IF SELF.TestConnection(TheServer,TheUserName,ThePassword,pTrusted)
+        IF SELF.TestConnection(TheServer,TheDatabase,TheUserName,ThePassword,pTrusted)
             TheResult = CLIP(TheServer) & ',' & CLIP(TheDatabase) & ',' & CLIP(TheUserName) & ',' & CLIP(ThePassword) 
+            SETCURSOR()
             IF pTrusted
                 TheResult = CLIP(TheServer) & ',' & CLIP(TheDatabase) & ';TRUSTED_CONNECTION=Yes'   
-            END  
+            END      
+            us_ud.Debug('theresult is ' & TheResult)
             DO ProcedureReturn
         END
     END
-        
-    OPEN(Window)    
-        
+    SETCURSOR()  
+    SELECT(?SHEET1,2)
+    0{PROP:Hide} = FALSE
     EXECUTE pTrusted + 1
         ?LISTAuthentication{PROP:Selected} = 2   
         ?LISTAuthentication{PROP:Selected} = 1
@@ -206,7 +223,7 @@ Window                                      WINDOW('Connect'),AT(,,364,165),CENT
         OF ?ButtonTest  
             CASE EVENT()
             OF EVENT:Accepted
-                TheResult = SELF.TestConnection(TheServer,TheUserName,ThePassword,CHOOSE(?LISTAuthentication{PROP:Selected}=1,1,0),TestResult)  
+                TheResult = SELF.TestConnection(TheServer,TheDatabase,TheUserName,ThePassword,CHOOSE(?LISTAuthentication{PROP:Selected}=1,1,0),TestResult)  
                 MESSAGE(CLIP(TestResult))
                 CYCLE
             END
@@ -231,18 +248,33 @@ Window                                      WINDOW('Connect'),AT(,,364,165),CENT
     END    
     DO ProcedureReturn
     
-ProcedureReturn                         ROUTINE    
+ProcedureReturn                         ROUTINE  
+    
+    DATA
 
-    SELF.Catalog = TheDatabase 
+TheTestResult   BYTE(0)
+
+    CODE
+    
+    IF ~TheResult
+    ELSE
+        SELF.Catalog = TheDatabase 
         
-    pServer = TheServer
-    pDatabase = TheDatabase
-    pUserName = TheUserName
-    pPassword = ThePassword  
-  
-    SELF.SetQueryConnection(TheResult) 
-    SELF.ConnectionString = TheResult    
-    SELF.FullConnectionString = 'Server=' & CLIP(pServer) & ';Database=' & CLIP(TheDatabase) & ';Uid=' & CLIP(TheUserName) & ';Pwd=' & CLIP(ThePassword) & ';'
+        pServer = TheServer
+        pDatabase = TheDatabase
+        pUserName = TheUserName
+        pPassword = ThePassword                                                                                                                           
+        TheTestResult = SELF.TestConnection(TheServer,TheDatabase,TheUserName,ThePassword,CHOOSE(?LISTAuthentication{PROP:Selected}=1,1,0),TestResult)
+        IF ~TheTestResult
+!!    MESSAGE(CLIP(TestResult))
+            TheResult = ''
+        ELSE
+            SELF.SetQueryConnection(TheResult) 
+            SELF.ConnectionString = TheResult    
+            SELF.FullConnectionString = 'Server=' & CLIP(pServer) & ';Database=' & CLIP(TheDatabase) & ';Uid=' & CLIP(TheUserName) & ';Pwd=' & CLIP(ThePassword) & ';'
+        END 
+    END
+    
         
     RETURN TheResult
     
@@ -343,13 +375,14 @@ EndPos                                      Short
 ! -----------------------------------------------------------------------
 !!! <summary>Tests to make sure an MSSQL connection is valid/summary>           
 !!! <param name="Server">Server Name</param>
+!!! <param name="Database">Database Name</param>
 !!! <param name="Username">User Name</param>        
 !!! <param name="Password">Password</param>   
 !!! <param name="Trusted">Whether or not this is a Trusted connection.  TRUE = Trusted</param>        
 !!! <param name="ErrorOut">If included, the results of the test are returned in the passed String</param>        
 !!! <param name="Return Value">Returns TRUE if successful, FALSE if unsuccessful</param>        
 ! -----------------------------------------------------------------------        
-UltimateSQL.TestConnection              PROCEDURE(STRING Server, STRING USR, STRING PWD, <BYTE Trusted>, <*STRING ErrorOut>) ! BYTE
+UltimateSQL.TestConnection              PROCEDURE(STRING Server,STRING Database, STRING USR, STRING PWD, <BYTE Trusted>, <*STRING ErrorOut>) ! BYTE
 
 StatusString                                STRING(2000)
 FileErr                                     STRING(512)
@@ -380,13 +413,20 @@ cmptlevel                                           BYTE
 filename                                            CSTRING(261)
 version                                             LONG
                                                 END
+                                            END   
+TurboSQLTable                               FILE,DRIVER('MSSQL','/TURBOSQL=True'),OWNER(TestConnectionString), pre(TurboSQL) 
+Record                                          RECORD 
+Variable                                            LONG 
+                                                END
                                             END
     CODE                                                     ! Begin processed code
     !Return Values
 
     !True   =   Connection Successful
-    !False  =   Connection Failed
-
+    !False  =   Connection Failed      
+    
+     
+    
     StatusString = 'BEGIN TEST...<13><10><13><10>'
     If Omitted(4) Then
         Trusted = False
@@ -432,9 +472,16 @@ version                                             LONG
         If ReturnVal Then
             StatusString = Clip(StatusString) & 'SUCCESS!<13><10>'
             StatusString = Clip(StatusString) & 'Running Simple Query...'
-
-            SQLStr = 'SELECT COUNT(*) FROM SYSDATABASES'
-            SysDatabases{Prop:SQL} = SQLStr
+                                                         
+            IF Database
+                SQLStr = 'SELECT COUNT(*) FROM SYSDATABASES Where name = ' & SELF.Quote(Database)
+            ELSE
+                SQLStr = 'SELECT COUNT(*) FROM SYSDATABASES'
+            END
+            Create(TurboSQLTable) 
+            Open(TurboSQLTable) 
+!!            SysDatabases{Prop:SQL} = SQLStr
+            TurboSQLTable{Prop:SQL} = SQLStr
             If Error() Then
                 FileErr = 'Error['
                 If FileError() Then
@@ -443,11 +490,28 @@ version                                             LONG
                     FileErr = Clip(FileErr) & ErrorCode() & ']: ' & Error()
                 End
                 StatusString = Clip(StatusString) & 'FAILED!<13><10>' & Clip(FileErr) & '<13><10>'
+                
                 ReturnVal = False
-            Else
-                StatusString = Clip(StatusString) & 'SUCCESS!<13><10>'
+            Else 
+                NEXT(TurboSQLTable)
+                IF ERROR() 
+                    If FileError() Then
+                        FileErr = Clip(FileErr) & FileErrorCode() & ']: ' & FileError()
+                    Else
+                        FileErr = Clip(FileErr) & ErrorCode() & ']: ' & Error()
+                    End  
+                    StatusString = Clip(StatusString) & 'FAILED!<13><10>' & Clip(FileErr) & '<13><10>'
+                    ReturnVal = False
+                ELSIF TurboSQL:Variable = 0
+                    StatusString = Clip(StatusString) & 'FAILED!<13><10>Database does not exist.' & '<13><10>'
+                    ReturnVal = False
+                ELSE
+                    
+                    StatusString = Clip(StatusString) & 'SUCCESS!<13><10>'
+                END
+                
             End
-
+            Close(TurboSQLTable)
             Close(SysDatabases)
             SysDatabases{Prop:Disconnect}
         End
@@ -456,7 +520,8 @@ version                                             LONG
     End
 
     IF ReturnVal Then
-        StatusString = Clip(StatusString) & '<13><10>Test Succeeded!<13><10>'
+        StatusString = Clip(StatusString) & '<13><10>Test Succeeded!<13><10>'   
+        ReturnVal = TRUE
     Else
         StatusString = Clip(StatusString) & '<13><10>Test FAILED! Please Correct Problems and Try Again!<13><10>'
     End
@@ -478,7 +543,12 @@ szSQL                                       CSTRING(501)
 
     CODE	  
     us_ud.DebugOff = FALSE
-    us_ud.DebugPrefix = '!'
+    us_ud.DebugPrefix = '!' 
+    IF pOwnerName = ''
+        RETURN
+    END                                     
+    
+    
     SELF.TheDatabaseConnectionString = pOwnerName  
     DatabaseConnectionString = pOwnerName
     IF pQueryTableName = ''
@@ -488,14 +558,14 @@ szSQL                                       CSTRING(501)
     SELF.CheckQueryTableExists(DatabaseConnectionString)
     QueryResults{PROP:LogonScreen}=FALSE   
     
-    IF SELF.ColumnExists(SELF.QueryTableName,'C31')       
-    ELSE                                                
-        SELF.AddColumn(SELF.QueryTableName,'C31','VarChar',255)
-        SELF.AddColumn(SELF.QueryTableName,'C32','VarChar',255)
-        SELF.AddColumn(SELF.QueryTableName,'C33','VarChar',255)
-        SELF.AddColumn(SELF.QueryTableName,'C34','VarChar',255)
-        SELF.AddColumn(SELF.QueryTableName,'C35','VarChar',255)
-    END
+!!    IF SELF.ColumnExists(SELF.QueryTableName,'C31')       
+!!    ELSE                                                
+!!        SELF.AddColumn(SELF.QueryTableName,'C31','VarChar',255)
+!!        SELF.AddColumn(SELF.QueryTableName,'C32','VarChar',255)
+!!        SELF.AddColumn(SELF.QueryTableName,'C33','VarChar',255)
+!!        SELF.AddColumn(SELF.QueryTableName,'C34','VarChar',255)
+!!        SELF.AddColumn(SELF.QueryTableName,'C35','VarChar',255)
+!!    END
     
          
         
@@ -551,7 +621,7 @@ Result                                      STRING(500)
                  
 UltimateSQL.Query                       FUNCTION (STRING pQuery, <*QUEUE pQ>, <*? pC1>, <*? pC2>, <*? pC3>, <*? pC4>, <*? pC5>, <*? pC6>, <*? pC7>, <*? pC8>, <*? pC9>, <*? pC10>, <*? pC11>, <*? pC12>, <*? pC13>, <*? pC14>, <*? pC15>, <*? pC16>, <*? pC17>,<*? pC18>, <*? pC19>, <*? pC20>, <*? pC21>, <*? pC22>, <*? pC23>, <*? pC24>, <*? pC25>, <*? pC26>, <*? pC27>, <*? pC28>, <*? pC29>, <*? pC30>, <*? pC31>, <*? pC32>, <*? pC33>, <*? pC34>, <*? pC35>)  !,BYTE,PROC
 
-    CODE
+    CODE 
     Execute SELF.QueryMethod
         RETURN SELF.QueryDummy(pQuery,pQ,pC1,pC2,pC3,pC4,pC5,pC6,pC7,pC8,pC9,pC10,pC11,pC12,pC13,pC14,pC15,pC16,pC17,pC18,pC19,pC20,pC21,pC22,pC23,pC24,pC25,pC26,pC27,pC28,pC29,pC30,pC31,pC32,pC33,pC34,pC35)  !,BYTE,PROC
         RETURN SELF.QueryODBC(pQuery,pQ,pC1,pC2,pC3,pC4,pC5,pC6,pC7,pC8,pC9,pC10,pC11,pC12,pC13,pC14,pC15,pC16,pC17,pC18,pC19,pC20,pC21,pC22,pC23,pC24,pC25,pC26,pC27,pC28,pC29,pC30,pC31,pC32,pC33,pC34,pC35)  !,BYTE,PROC
@@ -599,8 +669,7 @@ SendToDebug                                 BYTE(0)
     END
     IF SELF.QueryTableName = ''
         SELF.QueryTableName = 'dbo.Queries'
-    END
-            
+    END 
     ExecOK = False  
     QueryResults{PROP:Name} = SELF.QueryTableName   
     FREE(BindVarQ) ; BindVars = False ; NoRetVal = False   
@@ -703,12 +772,13 @@ SendToDebug                                 BYTE(0)
         SELF.MULTIPLEACTIVERESULTSETS(TRUE)
         
         IF ~STATUS(QueryResults)
+!!            OPEN(QueryResults) 
+!!            IF ERROR()
+            CREATE(QueryResults)
             OPEN(QueryResults) 
-            IF ERROR()
-                CREATE(QueryResults)
-                OPEN(QueryResults) 
-            END 
-!            BUFFER(QueryResults,100)
+!!            END 
+            BUFFER(QueryResults,100)       
+            CLEAR(QueryResults)
         END
         IF ERRORCODE()
             MESSAGE('Error : ' & ERROR() & ' [' & ERRORCODE() &|
@@ -758,6 +828,7 @@ SendToDebug                                 BYTE(0)
                         ExecOK = True
                     ELSE
                         Recs = 0
+                        
                         LOOP
                             IF UsingEXEC
                                 NEXT(QueryView)
@@ -887,7 +958,7 @@ ViewResults                                 UltimateSQLResultsViewClass
     IF ~pQuery
         RETURN Level:Fatal
     END
-    
+    us_ud.Debug('top of odbc')    
     SELF.Init() 
     IF pQuery[1:1] = '*' OR SELF.QueryShowInDebugView OR SELF.QueryAddToClipboard OR SELF.QueryAppendToClipboard
         SendToDebug = FALSE
@@ -930,6 +1001,7 @@ ViewResults                                 UltimateSQLResultsViewClass
             
 !    TheConnectionStr.Append(';MARS_Connection=yes')
     ReturnValue = DirectODBC.OpenConnection(TheConnectionStr.Get(),QueryResults{PROP:HENV},QueryResults{PROP:Handle})  
+    
     If DirectODBC.ExecDirect(CLIP(pQuery)) = UltimateSQL_Success  
         Loop lCnt = 1 To Records(DirectODBC.ResultSets)
             if DirectODBC.AssignCurrentResultSet(lCnt) = Level:Benign
@@ -977,9 +1049,9 @@ ViewResults                                 UltimateSQLResultsViewClass
                 end
             end
         end
-        IF SELF.QueryResultsShowInPopUp
-           ViewResults.DisplayResults(DirectODBC)  
-        END
+!!        IF SELF.QueryResultsShowInPopUp
+!!           ViewResults.DisplayResults(DirectODBC)  
+!!        END
     end
     DirectODBC.CloseConnection()
     IF SELF.QueryShowInDebugView OR SendToDebug

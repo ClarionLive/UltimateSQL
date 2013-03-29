@@ -120,6 +120,7 @@ us_TrustedByte              BYTE(0)%CLSkelDataExternal
  #ENDIF  
  #EMBED(%usBeforeConnection,'Before Ultimate SQL Connection')
  %ConnectionString = %CLSkelClass.Connect(us_ServerString,us_UserNameString,us_PasswordString,us_DatabaseString,us_TrustedByte)
+ IF ~%ConnectionString;RETURN.
  %CLSkelClass.SetQueryConnection(%ConnectionString,'%QueryTable') 
  #EMBED(%usAfterConnection,'After Ultimate SQL Connection')
  #ENDIF

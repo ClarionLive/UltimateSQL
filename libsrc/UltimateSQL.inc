@@ -142,11 +142,11 @@ DatabaseExists                              PROCEDURE(STRING pDatabase),BYTE
 DropColumn                                  PROCEDURE(STRING pTable,STRING pColumn),LONG,PROC
 DropDatabase                                PROCEDURE(STRING pDatabase),LONG,PROC 
 DropDependencies                            PROCEDURE(STRING pTable,STRING pColumn),LONG,PROC  
-DropFunction                                PROCEDURE(STRING pFunction),LONG  !,PROC 
-DropProcedure                               PROCEDURE(STRING pProcedure),LONG  !,PROC 
+DropFunction                                PROCEDURE(STRING pFunction),LONG,PROC 
+DropProcedure                               PROCEDURE(STRING pProcedure),LONG,PROC 
 DropTable                                   PROCEDURE(FILE pFile),LONG,PROC 
 DropTable                                   PROCEDURE(STRING pFile),LONG,PROC 
-DropTrigger                                 PROCEDURE(STRING pTrigger),LONG  !,PROC 
+DropTrigger                                 PROCEDURE(STRING pTrigger),LONG,PROC 
 DropView                                    PROCEDURE(STRING pView),LONG,PROC 
 Empty                                       PROCEDURE(FILE pFile),LONG,PROC 
 ExecuteScript                               PROCEDURE(STRING pFileName),BYTE,PROC
@@ -170,7 +170,7 @@ SetCatalog                                  PROCEDURE(STRING pCatalog)
 SetQueryConnection                          PROCEDURE(STRING pOwnerName,<STRING pQueryTableName>)
 TableExists                                 PROCEDURE(FILE pFile,<STRING pCatalog>,<STRING pSchema>),BYTE
 TableExists                                 PROCEDURE(STRING pTable,<STRING pCatalog>,<STRING pSchema>),BYTE
-TestConnection                              PROCEDURE(STRING Server, STRING USR, STRING PWD, <Byte Trusted>, <*STRING ErrorOut>),BYTE 
+TestConnection                              PROCEDURE(STRING Server,STRING Database, STRING USR, STRING PWD, <Byte Trusted>, <*STRING ErrorOut>),BYTE,PROC
 Trace                                       PROCEDURE(*FILE pTbl, <STRING pLogfile>)  
 Truncate                                    PROCEDURE(FILE pFile),LONG,PROC 
 
