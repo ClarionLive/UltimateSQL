@@ -1,0 +1,71 @@
+#!-------------------------------------------------------------------------------
+#!
+#!               Template to generate View in procedure
+#!
+#!-------------------------------------------------------------------------------
+#EXTENSION (CreateView, 'Generate View for tables...'),PRIMARY('Generate View for tables...',OPTKEY),DESCRIPTION('Generate View for tables (' & %Primary & ')'),MULTI
+  #Prompt('View Name:',@S20),%CreateViewName,Default('SourceView'),REQ
+  #Display('Enter fields to project. If left blank all fields are projected.')
+  #BUTTON('Project Fields'),MULTI(%ProjectFields,%ProjectField),INLINE
+    #PROMPT('Hot Field:',FIELD),%ProjectField,REQ
+  #ENDBUTTON
+  #Display(' ')
+  #Prompt('Generate Open/Close for view',CHECK),%OpenCLoseView,Default(1),AT(10)
+!#
+#AtStart
+  #INSERT(%FileControlInitialize(ABC))
+  #EQUATE(%InstancePrefix,'')
+  #DECLARE(%QueueField),UNIQUE
+  #DECLARE(%QueueFieldAssignment,%QueueField)
+  #DECLARE(%QueueFieldComment,%QueueField)
+  #FOR (%ProjectFields)
+    #SET(%ValueConstruct,%ProjectField)
+    #INSERT(%CleanDimensions(ABC))
+    #ADD(%QueueField,%ValueConstruct)
+    #SET(%QueueFieldAssignment,%ProjectField)
+  #ENDFOR
+#ENDAT
+#AT(%DataSection),DESCRIPTION('SQL Views')
+  #DECLARE(%PreviouslyProjectedField),MULTI
+  #FIX(%File,%Primary)
+%[20]CreateViewName VIEW(%Primary)
+  #CALL(%ProjectQueueFields(ABC))
+  #CALL(%ConstructSecondaries(ABC), %Primary)
+%[20]Null END
+
+#ENDAT
+#AT(%WindowManagerMethodCodeSection,'Init','(),BYTE'),PRIORITY(7550),WHERE(%OpenCLoseView)
+Access:%Primary.OPEN()                                       #<!Create View Primary File
+Access:%Primary.UseFile                                      
+  #FOR(%Secondary)
+Access:%Secondary.OPEN()                                     #<!Create View Secondary File
+Access:%Secondary.UseFile                                    
+  #ENDFOR
+#PRIORITY(7560)
+Open(%CreateViewName)
+#ENDAT
+#AT(%WindowManagerMethodCodeSection,'Kill','(),BYTE'),PRIORITY(5999),WHERE(%OpenCLoseView)
+Access:%Primary.Close()                                       #<!Create View Primary File
+  #FOR(%Secondary)
+Access:%Secondary.Close()                                     #<!Create View Secondary File
+  #ENDFOR
+Close(%CreateViewName)
+#ENDAT
+#AT(%AfterFileOpen),WHERE(%OpenCLoseView and UPPER(%ProcedureTemplate) = 'SOURCE')
+#PRIORITY(5600)
+  Access:%Primary.OPEN()                                       #<!Create View Primary File
+  Access:%Primary.UseFile
+  #FOR(%Secondary)
+  Access:%Secondary.OPEN()                                     #<!Create View Secondary File
+  Access:%Secondary.UseFile                                      
+  #ENDFOR
+#PRIORITY(6000)
+  Open(%CreateViewName)
+#ENDAT
+#AT(%BeforeFileClose),WHERE(%OpenCLoseView and UPPER(%ProcedureTemplate) = 'SOURCE')
+Access:%Primary.Close()                                       #<!Create View Primary File
+  #FOR(%Secondary)
+Access:%Secondary.Close()                                     #<!Create View Secondary File
+  #ENDFOR
+Close(%CreateViewName)
+#ENDAT
