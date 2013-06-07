@@ -174,14 +174,15 @@ Window                                      WINDOW('Connect'),AT(,,364,165),CENT
     ?SHEET1{PROP:Wizard} = TRUE
     SETCURSOR(CURSOR:Wait)   
     DISPLAY()
-    IF TheServer AND TheDatabase  
+    IF (TheServer AND TheDatabase AND pTrusted) OR (TheServer AND TheDatabase AND ThePassword AND TheUserName AND ~pTrusted)       
         IF SELF.TestConnection(TheServer,TheDatabase,TheUserName,ThePassword,pTrusted)
             TheResult = CLIP(TheServer) & ',' & CLIP(TheDatabase) & ',' & CLIP(TheUserName) & ',' & CLIP(ThePassword) 
+            ?LISTAuthentication{PROP:Selected} = 2
             SETCURSOR()
             IF pTrusted
                 TheResult = CLIP(TheServer) & ',' & CLIP(TheDatabase) & ';TRUSTED_CONNECTION=Yes'   
+                ?LISTAuthentication{PROP:Selected} = 1
             END      
-            us_ud.Debug('theresult is ' & TheResult)
             DO ProcedureReturn
         END
     END
@@ -253,6 +254,8 @@ ProcedureReturn                         ROUTINE
     DATA
 
 TheTestResult   BYTE(0)
+IsTrusted       BYTE(0)
+
 
     CODE
     
@@ -263,15 +266,27 @@ TheTestResult   BYTE(0)
         pServer = TheServer
         pDatabase = TheDatabase
         pUserName = TheUserName
-        pPassword = ThePassword                                                                                                                           
-        TheTestResult = SELF.TestConnection(TheServer,TheDatabase,TheUserName,ThePassword,CHOOSE(?LISTAuthentication{PROP:Selected}=1,1,0),TestResult)
+        pPassword = ThePassword   
+        SELF.Server = TheServer
+        SELF.Database = TheDatabase
+        SELF.User = TheUserName
+        SELF.Password = ThePassword
+        IsTrusted = CHOOSE(?LISTAuthentication{PROP:Selected}=1,1,0)
+        TheTestResult = SELF.TestConnection(TheServer,TheDatabase,TheUserName,ThePassword,IsTrusted,TestResult)
         IF ~TheTestResult
-!!    MESSAGE(CLIP(TestResult))
             TheResult = ''
         ELSE
             SELF.SetQueryConnection(TheResult) 
             SELF.ConnectionString = TheResult    
-            SELF.FullConnectionString = 'Server=' & CLIP(pServer) & ';Database=' & CLIP(TheDatabase) & ';Uid=' & CLIP(TheUserName) & ';Pwd=' & CLIP(ThePassword) & ';'
+            IF IsTrusted
+                SELF.FullConnectionString = 'Server=' & CLIP(pServer) & ';Database=' & CLIP(TheDatabase) & ';TRUSTED_CONNECTION=Yes;'   
+                SELF.ConnectionStringWithProvider = 'Provider=SQLNCLI.1;Persist Security Info=True;;TRUSTED_CONNECTION=Yes;Initial Catalog=' & CLIP(TheDatabase) & ';Data Source=' & CLIP(TheServer)
+            ELSE  
+                SELF.FullConnectionString = 'Server=' & CLIP(pServer) & ';Database=' & CLIP(TheDatabase) & ';Uid=' & CLIP(TheUserName) & ';Pwd=' & CLIP(ThePassword) & ';'   
+                SELF.ConnectionStringWithProvider = 'Provider=SQLNCLI.1;Password=' & CLIP(ThePassword) & ';Persist Security Info=True;User ID=' & CLIP(TheUserName) & |
+                    ';Initial Catalog=' & CLIP(TheDatabase) & ';Data Source=' & CLIP(TheServer)
+            END
+            
         END 
     END
     
@@ -618,14 +633,20 @@ Result                                      STRING(500)
     
 
     RETURN       
-                 
+        
+    
 UltimateSQL.Query                       FUNCTION (STRING pQuery, <*QUEUE pQ>, <*? pC1>, <*? pC2>, <*? pC3>, <*? pC4>, <*? pC5>, <*? pC6>, <*? pC7>, <*? pC8>, <*? pC9>, <*? pC10>, <*? pC11>, <*? pC12>, <*? pC13>, <*? pC14>, <*? pC15>, <*? pC16>, <*? pC17>,<*? pC18>, <*? pC19>, <*? pC20>, <*? pC21>, <*? pC22>, <*? pC23>, <*? pC24>, <*? pC25>, <*? pC26>, <*? pC27>, <*? pC28>, <*? pC29>, <*? pC30>, <*? pC31>, <*? pC32>, <*? pC33>, <*? pC34>, <*? pC35>)  !,BYTE,PROC
 
-    CODE 
-    Execute SELF.QueryMethod
-        RETURN SELF.QueryDummy(pQuery,pQ,pC1,pC2,pC3,pC4,pC5,pC6,pC7,pC8,pC9,pC10,pC11,pC12,pC13,pC14,pC15,pC16,pC17,pC18,pC19,pC20,pC21,pC22,pC23,pC24,pC25,pC26,pC27,pC28,pC29,pC30,pC31,pC32,pC33,pC34,pC35)  !,BYTE,PROC
+    CODE                               
+    IF INSTRING('EXEC',UPPER(pQuery),1,1)
         RETURN SELF.QueryODBC(pQuery,pQ,pC1,pC2,pC3,pC4,pC5,pC6,pC7,pC8,pC9,pC10,pC11,pC12,pC13,pC14,pC15,pC16,pC17,pC18,pC19,pC20,pC21,pC22,pC23,pC24,pC25,pC26,pC27,pC28,pC29,pC30,pC31,pC32,pC33,pC34,pC35)  !,BYTE,PROC
+    ELSE
+        Execute SELF.QueryMethod
+            RETURN SELF.QueryDummy(pQuery,pQ,pC1,pC2,pC3,pC4,pC5,pC6,pC7,pC8,pC9,pC10,pC11,pC12,pC13,pC14,pC15,pC16,pC17,pC18,pC19,pC20,pC21,pC22,pC23,pC24,pC25,pC26,pC27,pC28,pC29,pC30,pC31,pC32,pC33,pC34,pC35)  !,BYTE,PROC
+            RETURN SELF.QueryODBC(pQuery,pQ,pC1,pC2,pC3,pC4,pC5,pC6,pC7,pC8,pC9,pC10,pC11,pC12,pC13,pC14,pC15,pC16,pC17,pC18,pC19,pC20,pC21,pC22,pC23,pC24,pC25,pC26,pC27,pC28,pC29,pC30,pC31,pC32,pC33,pC34,pC35)  !,BYTE,PROC
+        END 
     END
+    
 
         
         
@@ -774,7 +795,7 @@ SendToDebug                                 BYTE(0)
         IF ~STATUS(QueryResults)
 !!            OPEN(QueryResults) 
 !!            IF ERROR()
-            CREATE(QueryResults)
+!            CREATE(QueryResults) 
             OPEN(QueryResults) 
 !!            END 
             BUFFER(QueryResults,100)       
@@ -958,7 +979,6 @@ ViewResults                                 UltimateSQLResultsViewClass
     IF ~pQuery
         RETURN Level:Fatal
     END
-    us_ud.Debug('top of odbc')    
     SELF.Init() 
     IF pQuery[1:1] = '*' OR SELF.QueryShowInDebugView OR SELF.QueryAddToClipboard OR SELF.QueryAppendToClipboard
         SendToDebug = FALSE

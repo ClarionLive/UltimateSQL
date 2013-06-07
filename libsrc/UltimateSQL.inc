@@ -76,10 +76,15 @@ QueryTableName                              STRING(200),PRIVATE
 !ASCIIFileName                               STRING(100)
 
 
-TheDatabaseConnectionString                 STRING(200) 
-Catalog                                     STRING(200),PRIVATE  
+TheDatabaseConnectionString                 STRING(200)  
+Server                                      STRING(200)
+Database                                    STRING(200)
+User                                        STRING(200)
+Password                                    STRING(200)
+Catalog                                     STRING(200)  
 ConnectionString                            STRING(200)  
-FullConnectionString                        STRING(200)
+FullConnectionString                        STRING(200)   
+ConnectionStringWithProvider                STRING(200)
 
 
 
