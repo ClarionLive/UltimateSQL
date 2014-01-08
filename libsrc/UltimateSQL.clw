@@ -34,41 +34,41 @@ eVersion                                EQUATE(2)
 
 QueryResults                            FILE,DRIVER('MSSQL','/TURBOSQL=True /LOGONSCREEN=FALSE,/SAVESTOREDPROC=FALSE,/IGNORETRUNCATION = TRUE'),OWNER(DatabaseConnectionString),PRE(QueryResults),BINDABLE,THREAD
 Record                                      RECORD,PRE()
-C01                                             CSTRING(256)
-C02                                             CSTRING(256)
-C03                                             CSTRING(256)
-C04                                             CSTRING(256)
-C05                                             CSTRING(256)
-C06                                             CSTRING(256)
-C07                                             CSTRING(256)
-C08                                             CSTRING(256)
-C09                                             CSTRING(256)
-C10                                             CSTRING(256)
-C11                                             CSTRING(256)
-C12                                             CSTRING(256)
-C13                                             CSTRING(256)
-C14                                             CSTRING(256)
-C15                                             CSTRING(256)
-C16                                             CSTRING(256)
-C17                                             CSTRING(256)
-C18                                             CSTRING(256)
-C19                                             CSTRING(256)
-C20                                             CSTRING(256)
-C21                                             CSTRING(256)
-C22                                             CSTRING(256)
-C23                                             CSTRING(256)
-C24                                             CSTRING(256)
-C25                                             CSTRING(256)
-C26                                             CSTRING(256)
-C27                                             CSTRING(256)
-C28                                             CSTRING(256)
-C29                                             CSTRING(256)
-C30                                             CSTRING(256)
-C31                                             CSTRING(256)
-C32                                             CSTRING(256)
-C33                                             CSTRING(256)
-C34                                             CSTRING(256)
-C35                                             CSTRING(256)
+C01                                             CSTRING(8000)
+C02                                             CSTRING(8000)
+C03                                             CSTRING(8000)
+C04                                             CSTRING(8000)
+C05                                             CSTRING(8000)
+C06                                             CSTRING(8000)
+C07                                             CSTRING(8000)
+C08                                             CSTRING(8000)
+C09                                             CSTRING(8000)
+C10                                             CSTRING(8000)
+C11                                             CSTRING(8000)
+C12                                             CSTRING(8000)
+C13                                             CSTRING(8000)
+C14                                             CSTRING(8000)
+C15                                             CSTRING(8000)
+C16                                             CSTRING(8000)
+C17                                             CSTRING(8000)
+C18                                             CSTRING(8000)
+C19                                             CSTRING(8000)
+C20                                             CSTRING(8000)
+C21                                             CSTRING(8000)
+C22                                             CSTRING(8000)
+C23                                             CSTRING(8000)
+C24                                             CSTRING(8000)
+C25                                             CSTRING(8000)
+C26                                             CSTRING(8000)
+C27                                             CSTRING(8000)
+C28                                             CSTRING(8000)
+C29                                             CSTRING(8000)
+C30                                             CSTRING(8000)
+C31                                             CSTRING(8000)
+C32                                             CSTRING(8000)
+C33                                             CSTRING(8000)
+C34                                             CSTRING(8000)
+C35                                             CSTRING(8000)
                                             END
                                         END    
 
@@ -90,15 +90,15 @@ Scripts                                     UltimateSQLScripts
     CODE
 !    us_ud.DebugPrefix = '!'
 !    us_ud.DebugOff = FALSE
-    SavedQueryMethod = SELF.QueryMethod
-    SELF.QueryMethod = 2                          
+    SavedQueryMethod =  SELF.QueryMethod
+    SELF.QueryMethod =  2                          
     IF SELF.QueryTableName = ''
-        SELF.QueryTableName = 'Queries'
+        SELF.QueryTableName =  'Queries'
     END
 !!    IF ~SELF.TableExists(SELF.QueryTableName)  
 !!        SELF.QueryODBC(Scripts.CreateQueryTable())
 !!    END
-    SELF.QueryMethod = SavedQueryMethod
+    SELF.QueryMethod =  SavedQueryMethod
 
 
 
@@ -162,36 +162,36 @@ Window                                      WINDOW('Connect'),AT(,,364,165),CENT
                                                 END
                                             END
     CODE
-    us_ud.DebugOff = False
-    us_ud.DebugPrefix = '!'
+    us_ud.DebugOff    =  False
+    us_ud.DebugPrefix =  '!'
     
-    TheServer = pServer
-    TheDatabase = pDatabase
-    TheUserName = pUserName
-    ThePassword = pPassword    
+    TheServer         =  pServer
+    TheDatabase       =  pDatabase
+    TheUserName       =  pUserName
+    ThePassword       =  pPassword    
     OPEN(Window)              
-    0{PROP:Hide} = TRUE
-    ?SHEET1{PROP:Wizard} = TRUE
+    0{PROP:Hide        } =  TRUE
+    ?SHEET1{PROP:Wizard} =  TRUE
     SETCURSOR(CURSOR:Wait)   
     DISPLAY()
     IF (TheServer AND TheDatabase AND pTrusted) OR (TheServer AND TheDatabase AND ThePassword AND TheUserName AND ~pTrusted)       
         IF SELF.TestConnection(TheServer,TheDatabase,TheUserName,ThePassword,pTrusted)
-            TheResult = CLIP(TheServer) & ',' & CLIP(TheDatabase) & ',' & CLIP(TheUserName) & ',' & CLIP(ThePassword) 
-            ?LISTAuthentication{PROP:Selected} = 2
+            TheResult                          =  CLIP(TheServer) & ',' & CLIP(TheDatabase) & ',' & CLIP(TheUserName) & ',' & CLIP(ThePassword) 
+            ?LISTAuthentication{PROP:Selected} =  2
             SETCURSOR()
             IF pTrusted
-                TheResult = CLIP(TheServer) & ',' & CLIP(TheDatabase) & ';TRUSTED_CONNECTION=Yes'   
-                ?LISTAuthentication{PROP:Selected} = 1
+                TheResult                          =  CLIP(TheServer) & ',' & CLIP(TheDatabase) & ';TRUSTED_CONNECTION=Yes'   
+                ?LISTAuthentication{PROP:Selected} =  1
             END      
             DO ProcedureReturn
         END
     END
     SETCURSOR()  
     SELECT(?SHEET1,2)
-    0{PROP:Hide} = FALSE
+    0{PROP:Hide} =  FALSE
     EXECUTE pTrusted + 1
-        ?LISTAuthentication{PROP:Selected} = 2   
-        ?LISTAuthentication{PROP:Selected} = 1
+        ?LISTAuthentication{PROP:Selected} =  2   
+        ?LISTAuthentication{PROP:Selected} =  1
     END
     DO SetUserPasswordFields
 
@@ -201,7 +201,7 @@ Window                                      WINDOW('Connect'),AT(,,364,165),CENT
             CASE EVENT()
             OF EVENT:DroppingDown
                 If ~Records(SQLServers)
-                    ConnectStr = 'Driver=SQL Server;'
+                    ConnectStr =  'Driver=SQL Server;'
                     SELF.GetConnectionInformation(ConnectStr, SQLServers,CHOOSE(?LISTAuthentication{PROP:Selected}=1,1,0))
                     Display()
                 End
@@ -216,7 +216,7 @@ Window                                      WINDOW('Connect'),AT(,,364,165),CENT
             CASE EVENT()
             OF EVENT:DroppingDown
                 If ~Records(SQLDatabases)
-                    ConnectStr = 'Driver={{SQL Server};Server=' & Clip(TheServer) & ';User ID=' & Clip(TheUserName) & ';Password=' & Clip(ThePassword) & ';'
+                    ConnectStr =  'Driver={{SQL Server};Server=' & Clip(TheServer) & ';User ID=' & Clip(TheUserName) & ';Password=' & Clip(ThePassword) & ';'
                     SELF.GetConnectionInformation(ConnectStr, SQLDatabases,CHOOSE(?LISTAuthentication{PROP:Selected}=1,1,0))
                     Display()
                 End
@@ -224,16 +224,16 @@ Window                                      WINDOW('Connect'),AT(,,364,165),CENT
         OF ?ButtonTest  
             CASE EVENT()
             OF EVENT:Accepted
-                TheResult = SELF.TestConnection(TheServer,TheDatabase,TheUserName,ThePassword,CHOOSE(?LISTAuthentication{PROP:Selected}=1,1,0),TestResult)  
+                TheResult =  SELF.TestConnection(TheServer,TheDatabase,TheUserName,ThePassword,CHOOSE(?LISTAuthentication{PROP:Selected}=1,1,0),TestResult)  
                 MESSAGE(CLIP(TestResult))
                 CYCLE
             END
         OF ?OkButton  
             CASE EVENT()
             OF EVENT:Accepted
-                TheResult = CLIP(TheServer) & ',' & CLIP(TheDatabase) & ',' & CLIP(TheUserName) & ',' & CLIP(ThePassword) 
+                TheResult =  CLIP(TheServer) & ',' & CLIP(TheDatabase) & ',' & CLIP(TheUserName) & ',' & CLIP(ThePassword) 
                 IF ?LISTAuthentication{PROP:Selected}=1
-                    TheResult = CLIP(TheServer) & ',' & CLIP(TheDatabase) & ';TRUSTED_CONNECTION=Yes'   
+                    TheResult =  CLIP(TheServer) & ',' & CLIP(TheDatabase) & ';TRUSTED_CONNECTION=Yes'   
                 END
                 BREAK
             END
@@ -241,7 +241,7 @@ Window                                      WINDOW('Connect'),AT(,,364,165),CENT
         OF ?CancelButton
             CASE EVENT()
             OF EVENT:Accepted
-                TheResult = ''
+                TheResult =  ''
                 BREAK
             END
             
@@ -261,31 +261,25 @@ IsTrusted       BYTE(0)
     
     IF ~TheResult
     ELSE
-        SELF.Catalog = TheDatabase 
+        SELF.Catalog  =  TheDatabase 
         
-        pServer = TheServer
-        pDatabase = TheDatabase
-        pUserName = TheUserName
-        pPassword = ThePassword   
-        SELF.Server = TheServer
-        SELF.Database = TheDatabase
-        SELF.User = TheUserName
-        SELF.Password = ThePassword
-        IsTrusted = CHOOSE(?LISTAuthentication{PROP:Selected}=1,1,0)
-        TheTestResult = SELF.TestConnection(TheServer,TheDatabase,TheUserName,ThePassword,IsTrusted,TestResult)
+        pServer       =  TheServer
+        pDatabase     =  TheDatabase
+        pUserName     =  TheUserName
+        pPassword     =  ThePassword   
+        SELF.Server   =  TheServer
+        SELF.Database =  TheDatabase
+        SELF.User     =  TheUserName
+        SELF.Password =  ThePassword
+        IsTrusted     =  CHOOSE(?LISTAuthentication{PROP:Selected}=1,1,0)
+        TheTestResult =  SELF.TestConnection(TheServer,TheDatabase,TheUserName,ThePassword,IsTrusted,TestResult)
         IF ~TheTestResult
-            TheResult = ''
+            TheResult =  ''
         ELSE
             SELF.SetQueryConnection(TheResult) 
-            SELF.ConnectionString = TheResult    
-            IF IsTrusted
-                SELF.FullConnectionString = 'Server=' & CLIP(pServer) & ';Database=' & CLIP(TheDatabase) & ';TRUSTED_CONNECTION=Yes;'   
-                SELF.ConnectionStringWithProvider = 'Provider=SQLNCLI.1;Persist Security Info=True;;TRUSTED_CONNECTION=Yes;Initial Catalog=' & CLIP(TheDatabase) & ';Data Source=' & CLIP(TheServer)
-            ELSE  
-                SELF.FullConnectionString = 'Server=' & CLIP(pServer) & ';Database=' & CLIP(TheDatabase) & ';Uid=' & CLIP(TheUserName) & ';Pwd=' & CLIP(ThePassword) & ';'   
-                SELF.ConnectionStringWithProvider = 'Provider=SQLNCLI.1;Password=' & CLIP(ThePassword) & ';Persist Security Info=True;User ID=' & CLIP(TheUserName) & |
-                    ';Initial Catalog=' & CLIP(TheDatabase) & ';Data Source=' & CLIP(TheServer)
-            END
+            SELF.ConnectionString =  TheResult  
+            SELF.SetAllConnectionStrings(pServer,TheDatabase,TheUserName,ThePassword,IsTrusted)
+            
             
         END 
     END
@@ -295,12 +289,26 @@ IsTrusted       BYTE(0)
     
 SetUserPasswordFields                   ROUTINE
     
-    ?TheUserName{PROP:Disable}    = CHOOSE(?LISTAuthentication{PROP:Selected}=1,1,0)
-    ?TheUserName{PROP:Background} = CHOOSE(?LISTAuthentication{PROP:Selected}=1,COLOR:BTNFACE,COLOR:NONE)
-    ?ThePassword{PROP:Disable}    = CHOOSE(?LISTAuthentication{PROP:Selected}=1,1,0)        
-    ?ThePassword{PROP:Background} = CHOOSE(?LISTAuthentication{PROP:Selected}=1,COLOR:BTNFACE,COLOR:NONE)
+    ?TheUserName{PROP:Disable   } =  CHOOSE(?LISTAuthentication{PROP:Selected}=1,1,0)
+    ?TheUserName{PROP:Background} =  CHOOSE(?LISTAuthentication{PROP:Selected}=1,COLOR:BTNFACE,COLOR:NONE)
+    ?ThePassword{PROP:Disable   } =  CHOOSE(?LISTAuthentication{PROP:Selected}=1,1,0)        
+    ?ThePassword{PROP:Background} =  CHOOSE(?LISTAuthentication{PROP:Selected}=1,COLOR:BTNFACE,COLOR:NONE)
     
 
+! -----------------------------------------------------------------------        
+UltimateSQL.SetAllConnectionStrings PROCEDURE(STRING TheServer,STRING TheDatabase,STRING TheUserName,STRING ThePassword,BYTE IsTrusted)
+! -----------------------------------------------------------------------        
+    
+    CODE
+        
+    IF IsTrusted
+        SELF.FullConnectionString         =  'Server=' & CLIP(TheServer) & ';Database=' & CLIP(TheDatabase) & ';TRUSTED_CONNECTION=Yes;'   
+        SELF.ConnectionStringWithProvider =  'Provider=SQLNCLI.1;Persist Security Info=True;;TRUSTED_CONNECTION=Yes;Initial Catalog=' & CLIP(TheDatabase) & ';Data Source=' & CLIP(TheServer)
+    ELSE  
+        SELF.FullConnectionString         =  'Server=' & CLIP(TheServer) & ';Database=' & CLIP(TheDatabase) & ';Uid=' & CLIP(TheUserName) & ';Pwd=' & CLIP(ThePassword) & ';'   
+        SELF.ConnectionStringWithProvider =  'Provider=SQLNCLI.1;Password=' & CLIP(ThePassword) & ';Persist Security Info=True;User ID=' & CLIP(TheUserName) & |
+            ';Initial Catalog=' & CLIP(TheDatabase) & ';Data Source=' & CLIP(TheServer)
+    END 
 
 ! -----------------------------------------------------------------------
 !!! <summary>Gets a list of MSSQL Servers or Databases</summary>           
@@ -325,37 +333,37 @@ EndPos                                      Short
     CODE                                                     ! Begin processed code
                                               
     SetCursor(CURSOR:Wait)
-    ConnectStrIn = pConnectStr
-    SQLReturn = USQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, EnvHandle)
+    ConnectStrIn =  pConnectStr
+    SQLReturn    =  USQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, EnvHandle)
         
     If SQLReturn >= 0 Then !If No Error
-        SQLReturn = USQLSetEnvAttr(EnvHandle, SQL_ATTR_ODBC_VERSION, SQL_OV_ODBC3, 0)
+        SQLReturn =  USQLSetEnvAttr(EnvHandle, SQL_ATTR_ODBC_VERSION, SQL_OV_ODBC3, 0)
         If SQLReturn >= 0 Then   !If No Error
-            SQLReturn = USQLAllocHandle(SQL_HANDLE_DBC, EnvHandle, DBCHandle)
+            SQLReturn =  USQLAllocHandle(SQL_HANDLE_DBC, EnvHandle, DBCHandle)
             If SQLReturn >= 0 Then !If No Error
                 If pTrusted Then
-                    SQLReturn = USQLSetConnectAttr(DBCHandle, SQL_COPT_SS_INTEGRATED_SECURITY, 1, 0)
+                    SQLReturn =  USQLSetConnectAttr(DBCHandle, SQL_COPT_SS_INTEGRATED_SECURITY, 1, 0)
                 Else
-                    SQLReturn = USQLSetConnectAttr(DBCHandle, SQL_COPT_SS_INTEGRATED_SECURITY, 0, 0)
+                    SQLReturn =  USQLSetConnectAttr(DBCHandle, SQL_COPT_SS_INTEGRATED_SECURITY, 0, 0)
                 End
                 If SQLReturn >= 0 Then !If No Error
-                    SQLReturn = USQLBrowseConnect(DBCHandle, ConnectStrIn, Size(ConnectStrIn), ConnectStrOut, Size(ConnectStrOut), ReturnSize)
+                    SQLReturn =  USQLBrowseConnect(DBCHandle, ConnectStrIn, Size(ConnectStrIn), ConnectStrOut, Size(ConnectStrOut), ReturnSize)
                     If SQLReturn >= 0 Then !If Error Browsing Network
-                        TestStringIn = 'SERVER='
-                        StartPos = Instring(TestStringIn, UPPER(ConnectStrIn), 1, 1)
+                        TestStringIn =  'SERVER='
+                        StartPos     =  Instring(TestStringIn, UPPER(ConnectStrIn), 1, 1)
                         If StartPOS = 0 Then
-                            TestString = 'SERVER={{'
+                            TestString =  'SERVER={{'
                         Else
-                            TestString = 'DATABASE={{'
+                            TestString =  'DATABASE={{'
                         End
 
-                        StartPos = Instring(TestString, UPPER(ConnectStrOut), 1, 1)
+                        StartPos =  Instring(TestString, UPPER(ConnectStrOut), 1, 1)
 
                         If StartPOS > 0 Then
-                            StartPOS += Len(TestString)
-                            ConnectStrOut = Sub(ConnectStrOut, StartPos, Len(ConnectStrOut))
-                            EndPOS = Instring('}', UPPER(ConnectStrOut), 1, 1) - 1
-                            ConnectStrOut = Sub(ConnectStrOut, 1, EndPOS)
+                            StartPOS     +=  Len(TestString)
+                            ConnectStrOut =  Sub(ConnectStrOut, StartPos, Len(ConnectStrOut))
+                            EndPOS        =  Instring('}', UPPER(ConnectStrOut), 1, 1) - 1
+                            ConnectStrOut =  Sub(ConnectStrOut, 1, EndPOS)
 
                             Free(pConnectionList)
 
@@ -363,14 +371,14 @@ EndPos                                      Short
                                 I# += 1
                                 Clear(pConnectionList)
 
-                                EndPOS = Instring(',', UPPER(ConnectStrOut), 1, 1)
+                                EndPOS =  Instring(',', UPPER(ConnectStrOut), 1, 1)
                                 If EndPOS > 0 Then
-                                    pConnectionList.Name = Clip(Sub(ConnectStrOut, 1, EndPOS - 1))
-                                    ConnectStrOut = Sub(ConnectStrOut, EndPOS + 1, Len(ConnectStrOut))
+                                    pConnectionList.Name =  Clip(Sub(ConnectStrOut, 1, EndPOS - 1))
+                                    ConnectStrOut        =  Sub(ConnectStrOut, EndPOS + 1, Len(ConnectStrOut))
 
                                 Else
-                                    pConnectionList.Name = Clip(ConnectStrOut)
-                                    ConnectStrOut = ''
+                                    pConnectionList.Name =  Clip(ConnectStrOut)
+                                    ConnectStrOut        =  ''
                                 End
                                 Add(pConnectionList, pConnectionList.Name)
                             End !Loop Until Len(Clip(ConnectStrOut)) <= 0
@@ -442,19 +450,19 @@ Variable                                            LONG
     
      
     
-    StatusString = 'BEGIN TEST...<13><10><13><10>'
+    StatusString =  'BEGIN TEST...<13><10><13><10>'
     If Omitted(4) Then
-        Trusted = False
+        Trusted =  False
     End
 
-    ReturnVal = True
+    ReturnVal =  True
 
     If Len(Clip(Server)) <= 0 Then
-        ReturnVal = False
+        ReturnVal =  False
     End
 
     If (Len(Clip(USR)) <= 0) AND (~Trusted) Then
-        ReturnVal = False
+        ReturnVal =  False
     End
 
     If ReturnVal And Trusted Then
@@ -463,66 +471,66 @@ Variable                                            LONG
         Send(SysDatabases, '/TRUSTEDCONNECTION = FALSE')
     End
 
-    StatusString = Clip(StatusString) & 'Testing Provided Values...'
+    StatusString =  Clip(StatusString) & 'Testing Provided Values...'
 
     If ReturnVal Then
-        StatusString = Clip(StatusString) & 'SUCCESS!<13><10>'
-        StatusString = Clip(StatusString) & 'Attempting Connection...'
-        TestConnectionString = Clip(Server) & ',master,' & Clip(USR) & ',' & Clip(PWD)
-        SysDatabases{Prop:Logonscreen} = False
+        StatusString                   =  Clip(StatusString) & 'SUCCESS!<13><10>'
+        StatusString                   =  Clip(StatusString) & 'Attempting Connection...'
+        TestConnectionString           =  Clip(Server) & ',master,' & Clip(USR) & ',' & Clip(PWD)
+        SysDatabases{Prop:Logonscreen} =  False
         
         Open(SysDatabases)
 
         If Error() Then
-            FileErr = 'Error['
+            FileErr =  'Error['
             If FileError() Then
-                FileErr = Clip(FileErr) & FileErrorCode() & ']: ' & FileError()
+                FileErr =  Clip(FileErr) & FileErrorCode() & ']: ' & FileError()
             Else
-                FileErr = Clip(FileErr) & ErrorCode() & ']: ' & Error()
+                FileErr =  Clip(FileErr) & ErrorCode() & ']: ' & Error()
             End
-            StatusString = Clip(StatusString) & 'FAILED!<13><10>' & Clip(FileErr) & '<13><10>'
-            ReturnVal = False
+            StatusString =  Clip(StatusString) & 'FAILED!<13><10>' & Clip(FileErr) & '<13><10>'
+            ReturnVal    =  False
         End
 
         If ReturnVal Then
-            StatusString = Clip(StatusString) & 'SUCCESS!<13><10>'
-            StatusString = Clip(StatusString) & 'Running Simple Query...'
+            StatusString =  Clip(StatusString) & 'SUCCESS!<13><10>'
+            StatusString =  Clip(StatusString) & 'Running Simple Query...'
                                                          
             IF Database
-                SQLStr = 'SELECT COUNT(*) FROM SYSDATABASES Where name = ' & SELF.Quote(Database)
+                SQLStr =  'SELECT COUNT(*) FROM SYSDATABASES Where name = ' & SELF.Quote(Database)
             ELSE
-                SQLStr = 'SELECT COUNT(*) FROM SYSDATABASES'
+                SQLStr =  'SELECT COUNT(*) FROM SYSDATABASES'
             END
             Create(TurboSQLTable) 
             Open(TurboSQLTable) 
 !!            SysDatabases{Prop:SQL} = SQLStr
-            TurboSQLTable{Prop:SQL} = SQLStr
+            TurboSQLTable{Prop:SQL} =  SQLStr
             If Error() Then
-                FileErr = 'Error['
+                FileErr =  'Error['
                 If FileError() Then
-                    FileErr = Clip(FileErr) & FileErrorCode() & ']: ' & FileError()
+                    FileErr =  Clip(FileErr) & FileErrorCode() & ']: ' & FileError()
                 Else
-                    FileErr = Clip(FileErr) & ErrorCode() & ']: ' & Error()
+                    FileErr =  Clip(FileErr) & ErrorCode() & ']: ' & Error()
                 End
-                StatusString = Clip(StatusString) & 'FAILED!<13><10>' & Clip(FileErr) & '<13><10>'
+                StatusString =  Clip(StatusString) & 'FAILED!<13><10>' & Clip(FileErr) & '<13><10>'
                 
-                ReturnVal = False
+                ReturnVal    =  False
             Else 
                 NEXT(TurboSQLTable)
                 IF ERROR() 
                     If FileError() Then
-                        FileErr = Clip(FileErr) & FileErrorCode() & ']: ' & FileError()
+                        FileErr =  Clip(FileErr) & FileErrorCode() & ']: ' & FileError()
                     Else
-                        FileErr = Clip(FileErr) & ErrorCode() & ']: ' & Error()
+                        FileErr =  Clip(FileErr) & ErrorCode() & ']: ' & Error()
                     End  
-                    StatusString = Clip(StatusString) & 'FAILED!<13><10>' & Clip(FileErr) & '<13><10>'
-                    ReturnVal = False
+                    StatusString =  Clip(StatusString) & 'FAILED!<13><10>' & Clip(FileErr) & '<13><10>'
+                    ReturnVal    =  False
                 ELSIF TurboSQL:Variable = 0
-                    StatusString = Clip(StatusString) & 'FAILED!<13><10>Database does not exist.' & '<13><10>'
-                    ReturnVal = False
+                    StatusString =  Clip(StatusString) & 'FAILED!<13><10>Database does not exist.' & '<13><10>'
+                    ReturnVal    =  False
                 ELSE
                     
-                    StatusString = Clip(StatusString) & 'SUCCESS!<13><10>'
+                    StatusString =  Clip(StatusString) & 'SUCCESS!<13><10>'
                 END
                 
             End
@@ -531,18 +539,18 @@ Variable                                            LONG
             SysDatabases{Prop:Disconnect}
         End
     Else
-        StatusString = Clip(StatusString) & 'FAILED!<13><10>'
+        StatusString =  Clip(StatusString) & 'FAILED!<13><10>'
     End
 
     IF ReturnVal Then
-        StatusString = Clip(StatusString) & '<13><10>Test Succeeded!<13><10>'   
-        ReturnVal = TRUE
+        StatusString =  Clip(StatusString) & '<13><10>Test Succeeded!<13><10>'   
+        ReturnVal    =  TRUE
     Else
-        StatusString = Clip(StatusString) & '<13><10>Test FAILED! Please Correct Problems and Try Again!<13><10>'
+        StatusString =  Clip(StatusString) & '<13><10>Test FAILED! Please Correct Problems and Try Again!<13><10>'
     End
         
     If ~Omitted(ErrorOut) Then
-        ErrorOut = StatusString   
+        ErrorOut =  StatusString   
     End
 
     Return ReturnVal     
@@ -557,21 +565,21 @@ UltimateSQL.SetQueryConnection          PROCEDURE(STRING pOwnerName,<STRING pQue
 szSQL                                       CSTRING(501)
 
     CODE	  
-    us_ud.DebugOff = FALSE
-    us_ud.DebugPrefix = '!' 
+    us_ud.DebugOff    =  FALSE
+    us_ud.DebugPrefix =  '!' 
     IF pOwnerName = ''
         RETURN
     END                                     
     
     
-    SELF.TheDatabaseConnectionString = pOwnerName  
-    DatabaseConnectionString = pOwnerName
+    SELF.TheDatabaseConnectionString =  pOwnerName  
+    DatabaseConnectionString         =  pOwnerName
     IF pQueryTableName = ''
-        pQueryTableName = 'Queries'
+        pQueryTableName =  'Queries'
     END
-    SELF.QueryTableName = pQueryTableName          
+    SELF.QueryTableName =  pQueryTableName          
     SELF.CheckQueryTableExists(DatabaseConnectionString)
-    QueryResults{PROP:LogonScreen}=FALSE   
+    QueryResults{PROP:LogonScreen} =  FALSE   
     
 !!    IF SELF.ColumnExists(SELF.QueryTableName,'C31')       
 !!    ELSE                                                
@@ -594,9 +602,9 @@ UltimateSQL.Init                        PROCEDURE()
          
     IF ~DebugInitted
 
-        SELF._Driver = MS_SQL 
+        SELF._Driver =  MS_SQL 
     END
-    DebugInitted = TRUE  
+    DebugInitted =  TRUE  
     
                                             
 !-----------------------------------
@@ -611,12 +619,13 @@ UltimateSQL.Kill                        PROCEDURE()
 
 UltimateSQL.QueryResult                 FUNCTION (STRING pQuery)   !,STRING 
 
-Result                                      STRING(500)
+Result                                      STRING(5000)
 
     CODE
         
-    Result = ''
-    SELF.Query(pQuery,,Result)
+    Result =  ''
+    SELF.Query(pQuery,,Result)        
+     
 
     RETURN CLIP(Result)
         
@@ -628,7 +637,7 @@ Result                                      STRING(500)
     CODE
     
     IF pCatalog
-        SELF.Catalog = pCatalog
+        SELF.Catalog =  pCatalog
     END
     
 
@@ -637,12 +646,19 @@ Result                                      STRING(500)
     
 UltimateSQL.Query                       FUNCTION (STRING pQuery, <*QUEUE pQ>, <*? pC1>, <*? pC2>, <*? pC3>, <*? pC4>, <*? pC5>, <*? pC6>, <*? pC7>, <*? pC8>, <*? pC9>, <*? pC10>, <*? pC11>, <*? pC12>, <*? pC13>, <*? pC14>, <*? pC15>, <*? pC16>, <*? pC17>,<*? pC18>, <*? pC19>, <*? pC20>, <*? pC21>, <*? pC22>, <*? pC23>, <*? pC24>, <*? pC25>, <*? pC26>, <*? pC27>, <*? pC28>, <*? pC29>, <*? pC30>, <*? pC31>, <*? pC32>, <*? pC33>, <*? pC34>, <*? pC35>)  !,BYTE,PROC
 
-    CODE                               
+    CODE  
+        
     IF INSTRING('EXEC',UPPER(pQuery),1,1)
         RETURN SELF.QueryODBC(pQuery,pQ,pC1,pC2,pC3,pC4,pC5,pC6,pC7,pC8,pC9,pC10,pC11,pC12,pC13,pC14,pC15,pC16,pC17,pC18,pC19,pC20,pC21,pC22,pC23,pC24,pC25,pC26,pC27,pC28,pC29,pC30,pC31,pC32,pC33,pC34,pC35)  !,BYTE,PROC
     ELSE
-        Execute SELF.QueryMethod
-            RETURN SELF.QueryDummy(pQuery,pQ,pC1,pC2,pC3,pC4,pC5,pC6,pC7,pC8,pC9,pC10,pC11,pC12,pC13,pC14,pC15,pC16,pC17,pC18,pC19,pC20,pC21,pC22,pC23,pC24,pC25,pC26,pC27,pC28,pC29,pC30,pC31,pC32,pC33,pC34,pC35)  !,BYTE,PROC
+        Execute SELF.QueryMethod      
+            BEGIN    
+                IF Omitted(pQ) AND Omitted(pC1)
+                    RETURN SELF.QueryResult(pQuery)
+                ELSE
+                    RETURN SELF.QueryDummy(pQuery,pQ,pC1,pC2,pC3,pC4,pC5,pC6,pC7,pC8,pC9,pC10,pC11,pC12,pC13,pC14,pC15,pC16,pC17,pC18,pC19,pC20,pC21,pC22,pC23,pC24,pC25,pC26,pC27,pC28,pC29,pC30,pC31,pC32,pC33,pC34,pC35)  !,BYTE,PROC
+                END
+            END
             RETURN SELF.QueryODBC(pQuery,pQ,pC1,pC2,pC3,pC4,pC5,pC6,pC7,pC8,pC9,pC10,pC11,pC12,pC13,pC14,pC15,pC16,pC17,pC18,pC19,pC20,pC21,pC22,pC23,pC24,pC25,pC26,pC27,pC28,pC29,pC30,pC31,pC32,pC33,pC34,pC35)  !,BYTE,PROC
         END 
     END
@@ -656,9 +672,7 @@ UltimateSQL.Query                       FUNCTION (STRING pQuery, <*QUEUE pQ>, <*
 !!! <param name="Q">A Queue to receive Query results.  This is optional if you are only receiving a single row.</param>        
 !!! <param name="C1...C30">Variables belonging to the passed Queue, or stand-alone variables to reeive a single result.</param>        
 ! -----------------------------------------------------------------------
-UltimateSQL.QueryDummy                       FUNCTION (STRING pQuery, <*QUEUE pQ>, <*? pC1>, <*? pC2>, <*? pC3>, <*? pC4>, <*? pC5>, <*? pC6>, <*? pC7>, <*? pC8>, <*? pC9>, <*? pC10>, <*? pC11>, <*? pC12>, <*? pC13>, <*? pC14>, <*? pC15>, <*? pC16>, <*? pC17>,<*? pC18>, <*? pC19>, <*? pC20>, <*? pC21>, <*? pC22>, <*? pC23>, <*? pC24>, <*? pC25>, <*? pC26>, <*? pC27>, <*? pC28>, <*? pC29>, <*? pC30>, <*? pC31>, <*? pC32>, <*? pC33>, <*? pC34>, <*? pC35>)  !,BYTE,PROC
-
-
+UltimateSQL.QueryDummy                  FUNCTION (STRING pQuery, <*QUEUE pQ>, <*? pC1>, <*? pC2>, <*? pC3>, <*? pC4>, <*? pC5>, <*? pC6>, <*? pC7>, <*? pC8>, <*? pC9>, <*? pC10>, <*? pC11>, <*? pC12>, <*? pC13>, <*? pC14>, <*? pC15>, <*? pC16>, <*? pC17>,<*? pC18>, <*? pC19>, <*? pC20>, <*? pC21>, <*? pC22>, <*? pC23>, <*? pC24>, <*? pC25>, <*? pC26>, <*? pC27>, <*? pC28>, <*? pC29>, <*? pC30>, <*? pC31>, <*? pC32>, <*? pC33>, <*? pC34>, <*? pC35>)  !,BYTE,PROC
 
 QueryView                                   VIEW(QueryResults)
                                             END
@@ -679,31 +693,30 @@ Name                                            STRING(18)    ! Name
 UsingExec                                   BYTE(0)  
 SendToDebug                                 BYTE(0)
 
-
-
     CODE                                                     ! Begin processed code
     PUSHBIND     
     SELF.Init()
     
     IF DatabaseConnectionString = ''
-       DatabaseConnectionString = SELF.TheDatabaseConnectionString
+        DatabaseConnectionString =  SELF.TheDatabaseConnectionString
     END
     IF SELF.QueryTableName = ''
-        SELF.QueryTableName = 'dbo.Queries'
+        SELF.QueryTableName =  'dbo.Queries'
     END 
-    ExecOK = False  
-    QueryResults{PROP:Name} = SELF.QueryTableName   
+        
+    ExecOK                  =  False  
+    QueryResults{PROP:Name} =  SELF.QueryTableName   
     FREE(BindVarQ) ; BindVars = False ; NoRetVal = False   
     IF (OMITTED(pQ) AND OMITTED(pC1) AND OMITTED(pC2)) THEN NoRetVal = True.  ! No Return Values - Possible an UPDATE/DELETE statement
     IF NOT OMITTED(pQ) THEN ResultQ &= pQ END  ! If Result Queue Exists - Reference Queue
     IF INSTRING('EXEC',UPPER(pQuery),1,1)
-        UsingEXEC = TRUE
+        UsingEXEC =  TRUE
     END        
     IF pQuery[1:1] = '*' OR SELF.ShowQueryInDebugView OR SELF.AddQueryToClipboard OR SELF.AppendQueryToClipboard
-        SendToDebug = FALSE
+        SendToDebug =  FALSE
         IF pQuery[1:1] = '*'
-            pQuery = SUB(pQuery,2,10000) 
-            SendToDebug = TRUE
+            pQuery      =  SUB(pQuery,2,50000) 
+            SendToDebug =  TRUE
         END 
         IF SELF.ShowQueryInDebugView OR SendToDebug
             SELF.Debug(pQuery)  
@@ -721,13 +734,13 @@ SendToDebug                                 BYTE(0)
     ELSE
 	    !~! Parse Query String for EMBEDDED Variables to be BOUND
         IF INSTRING('CALL ',UPPER(pQuery),1,1) ! Check if Stored Procedure is Called
-            QString = CLIP(pQuery)
+            QString =  CLIP(pQuery)
             S# = 0 ;  L# = LEN(CLIP(QString))
             LOOP C# = 1 TO L#
                 IF S# AND INLIST(QString[C#],',',' ',')') 
 					! End of Binded Variable
-                    BindVarQ.No   = RECORDS(BindVarQ) + 1
-                    BindVarQ.Name = QString[(S#+1) : (C#-1)]
+                    BindVarQ.No   =  RECORDS(BindVarQ) + 1
+                    BindVarQ.Name =  QString[(S#+1) : (C#-1)]
                     IF NOT OMITTED(3+BindVarQ.No) ! Bound Variables MUST be at the Beginning of OUTPUT Variables
                         EXECUTE BindVarQ.No
                             BIND(CLIP(BindVarQ.Name),pC1)
@@ -788,16 +801,15 @@ SendToDebug                                 BYTE(0)
                 END
             END
 
-            BindVars = RECORDS(BindVarQ)
+            BindVars =  RECORDS(BindVarQ)
         END   
         SELF.MULTIPLEACTIVERESULTSETS(TRUE)
-        
         IF ~STATUS(QueryResults)
-!!            OPEN(QueryResults) 
+            OPEN(QueryResults)
 !!            IF ERROR()
-!            CREATE(QueryResults) 
-            OPEN(QueryResults) 
-!!            END 
+!!                MESSAGE('Err ' & ERROR() & ' ' & FILEERROR())
+!!            END
+            
             BUFFER(QueryResults,100)       
             CLEAR(QueryResults)
         END
@@ -808,8 +820,7 @@ SendToDebug                                 BYTE(0)
         ELSE
             SEND(QueryResults,'/SAVESTOREDPROC = FALSE')
             SEND(QueryResults,'/GATHERATOPEN = TRUE')
-!                SEND(QueryResults,'/TURBOSQL = TRUE')
-            QueryResults{PROP:BusyHandling} = 3	
+            QueryResults{PROP:BusyHandling} =  3	
                 
             IF UsingEXEC
                 OPEN(QueryView)
@@ -825,9 +836,11 @@ SendToDebug                                 BYTE(0)
                     ']|' & 'File : ' & ERRORFILE(),'OPEN VIEW')
             ELSE
                 IF UsingEXEC
-                    QueryView{PROP:SQL} = CLIP(pQuery)
+                    QueryView{PROP:SQL} =  CLIP(pQuery)
                 ELSE
-                    QueryResults{PROP:SQL} = CLIP(pQuery)  
+                    QueryResults{PROP:SQL} =  CLIP(pQuery)  
+                    SELF.SQLError = CLIP(ERROR()) & ', ' & CLIP(FILEERROR())
+                    
                 END 
                 ErrCode# = ERRORCODE()    
                 IF ERRORCODE() = 90 AND FILEERRORCODE() = 37000
@@ -846,19 +859,20 @@ SendToDebug                                 BYTE(0)
 	!                    CLIP(pQuery),'EXECUTE QUERY')
                 ELSE
                     IF BindVars OR NoRetVal
-                        ExecOK = True
+                        ExecOK =  True
                     ELSE
-                        Recs = 0
+                        Recs =  0
                         
                         LOOP
                             IF UsingEXEC
                                 NEXT(QueryView)
                             ELSE
                                 NEXT(QueryResults)   ! Retrieve Records    
-                            END      
-                            Recs += 1
+                            END     
+                            SELF.SQLError = CLIP(ERROR()) & ', ' & CLIP(FILEERROR())
+                            Recs +=  1
                             IF NOT ERRORCODE()
-                                ExecOK = True
+                                ExecOK =  True
                                 IF NOT OMITTED(pQ) THEN CLEAR(ResultQ). ! Clear Result Queue Buffer
                                 IF NOT OMITTED(pC1)  THEN pC1 = QueryResults:C01.
                                 IF NOT OMITTED(pC2)  THEN pC2 = QueryResults:C02.
@@ -940,7 +954,7 @@ SendToDebug                                 BYTE(0)
         END
     END
 
-        CLOSE(QueryResults)  
+    CLOSE(QueryResults)  
     IF UsingEXEC
         CLOSE(QueryView)
     END
@@ -955,10 +969,11 @@ SendToDebug                                 BYTE(0)
     FREE(BindVarQ)
 	!!  IF NOT OMITTED(2) THEN ResultQ &= NULL.    !MG
 
-    POPBIND
+    POPBIND       
+     
     RETURN ExecOK    
         
-UltimateSQL.QueryODBC                       FUNCTION (STRING pQuery, <*QUEUE pQ>, <*? pC1>, <*? pC2>, <*? pC3>, <*? pC4>, <*? pC5>, <*? pC6>, <*? pC7>, <*? pC8>, <*? pC9>, <*? pC10>, <*? pC11>, <*? pC12>, <*? pC13>, <*? pC14>, <*? pC15>, <*? pC16>, <*? pC17>,<*? pC18>, <*? pC19>, <*? pC20>, <*? pC21>, <*? pC22>, <*? pC23>, <*? pC24>, <*? pC25>, <*? pC26>, <*? pC27>, <*? pC28>, <*? pC29>, <*? pC30>, <*? pC31>, <*? pC32>, <*? pC33>, <*? pC34>, <*? pC35>)  !,BYTE,PROC
+UltimateSQL.QueryODBC                   FUNCTION (STRING pQuery, <*QUEUE pQ>, <*? pC1>, <*? pC2>, <*? pC3>, <*? pC4>, <*? pC5>, <*? pC6>, <*? pC7>, <*? pC8>, <*? pC9>, <*? pC10>, <*? pC11>, <*? pC12>, <*? pC13>, <*? pC14>, <*? pC15>, <*? pC16>, <*? pC17>,<*? pC18>, <*? pC19>, <*? pC20>, <*? pC21>, <*? pC22>, <*? pC23>, <*? pC24>, <*? pC25>, <*? pC26>, <*? pC27>, <*? pC28>, <*? pC29>, <*? pC30>, <*? pC31>, <*? pC32>, <*? pC33>, <*? pC34>, <*? pC35>)  !,BYTE,PROC
 
 ExecOK                                      BYTE(0)
 lCnt                                        long
@@ -981,10 +996,10 @@ ViewResults                                 UltimateSQLResultsViewClass
     END
     SELF.Init() 
     IF pQuery[1:1] = '*' OR SELF.QueryShowInDebugView OR SELF.QueryAddToClipboard OR SELF.QueryAppendToClipboard
-        SendToDebug = FALSE
+        SendToDebug =  FALSE
         IF pQuery[1:1] = '*'
-            pQuery = SUB(pQuery,2,10000) 
-            SendToDebug = TRUE
+            pQuery      =  SUB(pQuery,2,50000) 
+            SendToDebug =  TRUE
         END 
         IF SELF.QueryShowInDebugView OR SendToDebug
             SELF.Debug(pQuery)  
@@ -998,13 +1013,13 @@ ViewResults                                 UltimateSQLResultsViewClass
     END
     
     IF SELF.QueryTableName = ''
-        SELF.QueryTableName = 'dbo.Queries'
+        SELF.QueryTableName =  'dbo.Queries'
     END                       
         
         
-    ExecOK = False                           
-    QueryResults{PROP:Name} = SELF.QueryTableName        
-    QueryResults{PROP:Owner} = SELF.TheDatabaseConnectionString          
+    ExecOK                   =  False                           
+    QueryResults{PROP:Name } =  SELF.QueryTableName        
+    QueryResults{PROP:Owner} =  SELF.TheDatabaseConnectionString          
         
     TheOwnerString.Assign(SELF.TheDatabaseConnectionString)
     TheOwnerString.Split(',')
@@ -1013,14 +1028,12 @@ ViewResults                                 UltimateSQLResultsViewClass
     TheConnectionStr.Append(';Server='& TheOwnerString.GetLine(1))
     TheConnectionStr.Append(';Database='& TheOwnerString.GetLine(2))
     If TheOwnerString.GetLine(3) = ''
-!            TheConnectionStr.Append(';Trusted_Connection=yes')
     Else
         TheConnectionStr.Append(';UID='& TheOwnerString.GetLine(3))
         TheConnectionStr.Append(';PWD='& TheOwnerString.GetLine(4))
     End
             
-!    TheConnectionStr.Append(';MARS_Connection=yes')
-    ReturnValue = DirectODBC.OpenConnection(TheConnectionStr.Get(),QueryResults{PROP:HENV},QueryResults{PROP:Handle})  
+    ReturnValue =  DirectODBC.OpenConnection(TheConnectionStr.Get(),QueryResults{PROP:HENV},QueryResults{PROP:Handle})  
     
     If DirectODBC.ExecDirect(CLIP(pQuery)) = UltimateSQL_Success  
         Loop lCnt = 1 To Records(DirectODBC.ResultSets)
@@ -1128,7 +1141,8 @@ VarDefinition                               UltimateSQLString
 
 
     CODE
-    
+!!    us_ud.DebugOff = FALSE
+!!    us_ud.DebugPrefix = '!'
     IF ~SELF.ColumnExists(pTable,pColumn)
         RETURN SELF.AddColumn(pTable,pColumn,pTable,pLength,pOptions)
     ELSE
@@ -1141,11 +1155,11 @@ VarDefinition                               UltimateSQLString
             VarDefinition.Append(' ' & CLIP(pOptions))
         END
     
-        IF SELF.DropDependencies(pTable,pColumn)
-            RETURN SELF.QUERY('ALTER TABLE ' & CLIP(pTable) & ' ALTER COLUMN ' & CLIP(VarDefinition.Get()))        
-        ELSE
-            RETURN Level:Fatal
-        END 
+        SELF.DropDependencies(pTable,pColumn)
+        RETURN SELF.QUERY('ALTER TABLE ' & CLIP(pTable) & ' ALTER COLUMN ' & CLIP(VarDefinition.Get()))        
+!!        ELSE
+!!            RETURN Level:Fatal
+!!        END 
     END
                          
         
@@ -1165,13 +1179,13 @@ Result                                      LONG
 
     CODE
     
-    Catalog = pCatalog
-    Schema = pSchema
+    Catalog =  pCatalog
+    Schema  =  pSchema
     IF Catalog = ''
-        Catalog = SELF.Catalog
+        Catalog =  SELF.Catalog
     END             
     IF Schema = ''
-        Schema = 'dbo'
+        Schema =  'dbo'
     END
     RETURN SELF.QUERYResult('SELECT count(*) FROM INFORMATION_SCHEMA.COLUMNS' & |  
         ' WHERE TABLE_CATALOG = ' & CLIP(SELF.Quote(Catalog)) & |
@@ -1198,7 +1212,7 @@ VarDefinition                               UltimateSQLString
     CODE
         
     IF SELF.DropDependencies(pTable,pColumn)
-        Result = SELF.QUERY('ALTER TABLE ' & CLIP(pTable) & ' DROP COLUMN ' & CLIP(pColumn))   
+        Result =  SELF.QUERY('ALTER TABLE ' & CLIP(pTable) & ' DROP COLUMN ' & CLIP(pColumn))   
     END
         
     RETURN Result
@@ -1235,7 +1249,7 @@ Result                                      LONG
 
     CODE
         
-    RETURN SELF.QUERY('IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ' & SELF.Quote(NAME(pFile)) & ') DROP TABLE ' & CLIP(NAME(pFile)))   
+    RETURN SELF.QUERY('DROP TABLE ' & CLIP(NAME(pFile)))   
 
     
 ! -----------------------------------------------------------------------
@@ -1255,7 +1269,7 @@ Result                                      LONG
 !!! <summary>Drops a View from the Database</summary>           
 !!! <param name="View">View Name</param>
 ! ----------------------------------------------------------------------- 
-UltimateSQL.DropView                 PROCEDURE(STRING pView)  !,LONG  !,PROC 
+UltimateSQL.DropView                    PROCEDURE(STRING pView)  !,LONG  !,PROC 
 
 Result                                      LONG
 
@@ -1268,20 +1282,20 @@ Result                                      LONG
 !!! <summary>Drops a Procedure from the Database</summary>           
 !!! <param name="View">Procedure Name</param>
 ! ----------------------------------------------------------------------- 
-UltimateSQL.DropProcedure                    PROCEDURE(STRING pProcedure)  !,LONG  !,PROC 
+UltimateSQL.DropProcedure               PROCEDURE(STRING pProcedure)  !,LONG  !,PROC 
 
 Result                                      LONG
 
     CODE
         
-    RETURN SELF.QUERY('*IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE UPPER(ROUTINE_NAME) = ' & UPPER(SELF.Quote(pProcedure)) & ') DROP PROCEDURE ' & CLIP(pProcedure))  
+    RETURN SELF.QUERY('IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE UPPER(ROUTINE_NAME) = ' & UPPER(SELF.Quote(pProcedure)) & ') DROP PROCEDURE ' & CLIP(pProcedure))  
      
     
 ! -----------------------------------------------------------------------
 !!! <summary>Drops a Routine from the Database</summary>           
 !!! <param name="View">Routine Name</param>
 ! ----------------------------------------------------------------------- 
-UltimateSQL.DropFunction               PROCEDURE(STRING pFunction)  !,LONG  !,PROC 
+UltimateSQL.DropFunction                PROCEDURE(STRING pFunction)  !,LONG  !,PROC 
 
 Result                                      LONG
 
@@ -1307,7 +1321,7 @@ Result                                      LONG
 !!! <summary>Truncates a Table</summary>           
 !!! <param name="Table">Table Name</param>
 ! ----------------------------------------------------------------------- 
-UltimateSQL.Empty                    PROCEDURE(FILE pFile)  !,LONG  !,PROC 
+UltimateSQL.Empty                       PROCEDURE(FILE pFile)  !,LONG  !,PROC 
 
 Result                                      LONG
 
@@ -1334,7 +1348,7 @@ Result                                      LONG
 ! -----------------------------------------------------------------------        
 UltimateSQL.Get                         PROCEDURE(*KEY pKey, <STRING pSelect>)  !, BYTE, PROC
 
-oUltimateDB                                   UltimateDB
+oUltimateDB                                 UltimateDB
 
     CODE
 
@@ -1343,7 +1357,7 @@ oUltimateDB                                   UltimateDB
     
 UltimateSQL.Get                         PROCEDURE(*FILE pFile, *KEY pKey, <STRING pSelect>)  !, BYTE, PROC
 
-oUltimateDB                                   UltimateDB
+oUltimateDB                                 UltimateDB
 
     CODE
 
@@ -1390,7 +1404,7 @@ LocalFilter                                 UltimateString
 ! -----------------------------------------------------------------------        
 UltimateSQL.Set                         PROCEDURE(*KEY pKey, <STRING pSelect>, BYTE pReverse=False)
 
-oUltimateDB                                   UltimateDB
+oUltimateDB                                 UltimateDB
 
     CODE
 
@@ -1401,7 +1415,7 @@ oUltimateDB                                   UltimateDB
         
 UltimateSQL.Set                         PROCEDURE(*KEY pKeyIgnored,*KEY pKey, <STRING pSelect>, BYTE pReverse=False)
 
-oUltimateDB                                   UltimateDB
+oUltimateDB                                 UltimateDB
 
     CODE
 
@@ -1505,20 +1519,20 @@ version                                             LONG
 
 !Select Count(*) From sysobjects Where xtype='U'
     If Omitted(5) Then
-        Trusted = False
+        Trusted =  False
     End
 
-    ReturnVal = 0
+    ReturnVal =  0
 
     If Len(Clip(Server)) <= 0 Then
-        ReturnVal = -1
+        ReturnVal =  -1
     End
 
     If Len(Clip(Database)) <= 0 Then
-        ReturnVal = -2
+        ReturnVal =  -2
     End
     If (Len(Clip(USR)) <= 0) AND (~Trusted) Then
-        ReturnVal = -3
+        ReturnVal =  -3
     End
 
     If ~ReturnVal And Trusted Then
@@ -1528,31 +1542,31 @@ version                                             LONG
     End
 
     If ~ReturnVal Then
-        DatabaseCheckOwnerString = Clip(Server) & ',master,' & Clip(USR) & ',' & Clip(PWD)
-        SysDatabases{Prop:Logonscreen} = False
+        DatabaseCheckOwnerString       =  Clip(Server) & ',master,' & Clip(USR) & ',' & Clip(PWD)
+        SysDatabases{Prop:Logonscreen} =  False
         
         Open(SysDatabases)
 
         If Error() Then
             If FileError() Then
-                FileErr = FileErrorCode()
+                FileErr =  FileErrorCode()
             Else
-                FileErr = ErrorCode()
+                FileErr =  ErrorCode()
             End
-            ReturnVal = -4
+            ReturnVal =  -4
         End
 
         If ~ReturnVal Then
             !Query for Database in SQL Server
-            SQLStr = 'SELECT COUNT(*) FROM SYSDATABASES WHERE name=N''' & Database & ''';'
-            SysDatabases{Prop:SQL} = SQLStr
+            SQLStr                 =  'SELECT COUNT(*) FROM SYSDATABASES WHERE name=N''' & Database & ''';'
+            SysDatabases{Prop:SQL} =  SQLStr
             If Error() Then
                 If FileError() Then
-                    FileErr = FileErrorCode()
+                    FileErr =  FileErrorCode()
                 Else
-                    FileErr = ErrorCode()
+                    FileErr =  ErrorCode()
                 End
-                ReturnVal = -5
+                ReturnVal =  -5
             End
 
             If ~ReturnVal Then
@@ -1560,31 +1574,31 @@ version                                             LONG
                 Next(SysDatabases)
                 If Error() Then
                     If FileError() Then
-                        FileErr = FileErrorCode()
+                        FileErr =  FileErrorCode()
                     Else
-                        FileErr = ErrorCode()
+                        FileErr =  ErrorCode()
                     End
-                    ReturnVal = -6
+                    ReturnVal =  -6
                 Else
-                    DBCount = SysDatabases.Name
+                    DBCount =  SysDatabases.Name
                     If DBCount > 0 Then
                         !Database already exists do not create
-                        ReturnVal = 1
+                        ReturnVal =  1
                     End
                 End
 
                 If ~ReturnVal Then
                     !Create Database
-                    SQLStr = 'CREATE DATABASE [' & Clip(Database) & ']'
-                    SysDatabases{Prop:SQL} = SQLStr
+                    SQLStr                 =  'CREATE DATABASE [' & Clip(Database) & ']'
+                    SysDatabases{Prop:SQL} =  SQLStr
                     If Error() Then
                         If FileError() Then
-                            FileErr = FileErrorCode()
+                            FileErr =  FileErrorCode()
                             !Message(FileErrorCode() & ' = ' & FileError())
                         Else
-                            FileErr = ErrorCode()
+                            FileErr =  ErrorCode()
                         End
-                        ReturnVal = -7
+                        ReturnVal =  -7
                     End
                 End
             End
@@ -1599,13 +1613,13 @@ version                                             LONG
         Case Clip(FileErr)
         Of  '08001'
                 !Server Not Found
-            ReturnVal = -8
+            ReturnVal =  -8
         Of  '28000'
                 !Login Failed
-            ReturnVal = -9
+            ReturnVal =  -9
         Of  '37000'
                 !Do not have permission to complete operation
-            ReturnVal = -10
+            ReturnVal =  -10
         End
     End
     Return ReturnVal
@@ -1628,13 +1642,13 @@ Catalog                                     STRING(200)
 
     CODE     
     
-    Catalog = pCatalog
-    Schema = pSchema
+    Catalog =  pCatalog
+    Schema  =  pSchema
     IF Catalog = ''
-        Catalog = SELF.Catalog
+        Catalog =  SELF.Catalog
     END             
     IF Schema = ''
-        Schema = 'dbo'
+        Schema =  'dbo'
     END
     SELF.QUERY('SELECT count(*) FROM INFORMATION_SCHEMA.TABLES' & |  
         ' WHERE TABLE_CATALOG = ' & SELF.Quote(Catalog) & |
@@ -1661,7 +1675,7 @@ Result                                      LONG
 
     CODE
 
-    RETURN SELF.QUERY('DROP DATABASEE ' & CLIP(pDatabase))   
+    RETURN SELF.QUERY('DROP DATABASE ' & CLIP(pDatabase))   
         
         
 ! -----------------------------------------------------------------------
@@ -1694,14 +1708,14 @@ BlobSize                                    LONG
 
     CODE
     
-    BlobSize = pBlob{PROP:Size}
+    BlobSize =  pBlob{PROP:Size}
     
     IF BLOBSIZE = 0
         RETURN Level:Cancel
     END
     
     QueryStatement.Assign(pBlob[0:BlobSize])  
-    
+!    MESSAGE(QueryStatement.Get())
     RETURN SELF.ProcessScript(QueryStatement.Get())
                         
     
@@ -1716,7 +1730,7 @@ QueryRecords                                LONG
     
     QueryStatement.Assign(pScript)
     QueryStatement.Split()
-    QueryRecords = QueryStatement.Records()
+    QueryRecords =  QueryStatement.Records()
     
     LOOP Count = 1 TO QueryRecords
         IF  CLIP(LEFT(QueryStatement.GetLine(Count))) = 'GO'
@@ -1899,13 +1913,13 @@ Result                                      LONG
 ! -----------------------------------------------------------------------
 UltimateSQL.Quote                       PROCEDURE(STRING pText)
 
-oUltimateDB                                   UltimateSQLString
+oUltimateDB                                 UltimateSQLString
 
     CODE                            
         
     oUltimateDB.Assign(CLIP(pText))
     oUltimateDB.Quote(SELF._Driver)
-    RETURN CLIP(oUltimateDB.Get())    
+    RETURN ' ' & CLIP(oUltimateDB.Get()) & ' '    
 
 ! -----------------------------------------------------------------------
 !!! <summary>Handles display of Query errors</summary>
@@ -1954,12 +1968,12 @@ ErrorMessage                                STRING(300)
 ! -----------------------------------------------------------------------        
 UltimateSQL.Insert                      PROCEDURE(*FILE pTbl, BYTE pIncludePK=FALSE, BYTE pGetIdentity=FALSE)   !, LONG, PROC   
 
-oUltimateDB                                   UltimateDB
+oUltimateDB                                 UltimateDB
 Identity                                    LONG
 
     CODE
     
-    SELF.Query('*' & oUltimateDB.SQLInsert(pTbl,pIncludePK))
+    SELF.Query(oUltimateDB.SQLInsert(pTbl,pIncludePK))
     IF pGetIdentity
         SELF.Query('SELECT @@identity',,Identity)
         RETURN Identity
@@ -1981,7 +1995,7 @@ Identity                                    LONG
 ! -----------------------------------------------------------------------        
 UltimateSQL.Update                      PROCEDURE(*FILE pTbl)   !, BYTE, PROC  
 
-oUltimateDB                                   UltimateDB
+oUltimateDB                                 UltimateDB
 
     CODE
     
@@ -2103,7 +2117,7 @@ UltimateSQL.SendDriverString            PROCEDURE(STRING pMessage) !,STRING,PROC
 ! -----------------------------------------------------------------------        
 UltimateSQL.Trace                       PROCEDURE(*FILE pTbl, <STRING pLogfile>)
         
-oUltimateDB                                   UltimateDB
+oUltimateDB                                 UltimateDB
 
     CODE                                      
         
@@ -2117,12 +2131,12 @@ UltimateSQL.RemoveIllegalCharacters     PROCEDURE(String pString)
 Result                                      String(5000)
 
     CODE
-    Result = pString
+    Result =  pString
     Y# = 1
     LOOP
         X# = INSTRING('<39>',Result,1,Y#)
         IF ~X#;BREAK.
-        Result = SUB(Result,1,X#-1) & '<39><39>' & SUB(Result,X#+1,10000)
+        Result =  SUB(Result,1,X#-1) & '<39><39>' & SUB(Result,X#+1,10000)
         Y# = X# + 2
     END
 

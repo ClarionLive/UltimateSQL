@@ -84,7 +84,10 @@ Password                                    STRING(200)
 Catalog                                     STRING(200)  
 ConnectionString                            STRING(200)  
 FullConnectionString                        STRING(200)   
-ConnectionStringWithProvider                STRING(200)
+ConnectionStringWithProvider                STRING(200)     
+
+SQLError                                    STRING(200)
+
 
 
 
@@ -189,7 +192,7 @@ Destruct                                    PROCEDURE()
 Init                                        PROCEDURE()  
 Kill                                        PROCEDURE()
 
-Query                                       FUNCTION (STRING pQuery, <*QUEUE pQ>, <*? pC1>, <*? pC2>, <*? pC3>, <*? pC4>, <*? pC5>, <*? pC6>, <*? pC7>, <*? pC8>, <*? pC9>, <*? pC10>, <*? pC11>, <*? pC12>, <*? pC13>, <*? pC14>, <*? pC15>, <*? pC16>, <*? pC17>,<*? pC18>, <*? pC19>, <*? pC20>, <*? pC21>, <*? pC22>, <*? pC23>, <*? pC24>, <*? pC25>, <*? pC26>, <*? pC27>, <*? pC28>, <*? pC29>, <*? pC30>, <*? pC31>, <*? pC32>, <*? pC33>, <*? pC34>, <*? pC35>),BYTE,PROC
+Query                                       FUNCTION (STRING pQuery, <*QUEUE pQ>, <*? pC1>, <*? pC2>, <*? pC3>, <*? pC4>, <*? pC5>, <*? pC6>, <*? pC7>, <*? pC8>, <*? pC9>, <*? pC10>, <*? pC11>, <*? pC12>, <*? pC13>, <*? pC14>, <*? pC15>, <*? pC16>, <*? pC17>,<*? pC18>, <*? pC19>, <*? pC20>, <*? pC21>, <*? pC22>, <*? pC23>, <*? pC24>, <*? pC25>, <*? pC26>, <*? pC27>, <*? pC28>, <*? pC29>, <*? pC30>, <*? pC31>, <*? pC32>, <*? pC33>, <*? pC34>, <*? pC35>),STRING,PROC
 QueryDummy                                  FUNCTION (STRING pQuery, <*QUEUE pQ>, <*? pC1>, <*? pC2>, <*? pC3>, <*? pC4>, <*? pC5>, <*? pC6>, <*? pC7>, <*? pC8>, <*? pC9>, <*? pC10>, <*? pC11>, <*? pC12>, <*? pC13>, <*? pC14>, <*? pC15>, <*? pC16>, <*? pC17>,<*? pC18>, <*? pC19>, <*? pC20>, <*? pC21>, <*? pC22>, <*? pC23>, <*? pC24>, <*? pC25>, <*? pC26>, <*? pC27>, <*? pC28>, <*? pC29>, <*? pC30>, <*? pC31>, <*? pC32>, <*? pC33>, <*? pC34>, <*? pC35>),BYTE,PROC
 QueryODBC                                   FUNCTION (STRING pQuery, <*QUEUE pQ>, <*? pC1>, <*? pC2>, <*? pC3>, <*? pC4>, <*? pC5>, <*? pC6>, <*? pC7>, <*? pC8>, <*? pC9>, <*? pC10>, <*? pC11>, <*? pC12>, <*? pC13>, <*? pC14>, <*? pC15>, <*? pC16>, <*? pC17>,<*? pC18>, <*? pC19>, <*? pC20>, <*? pC21>, <*? pC22>, <*? pC23>, <*? pC24>, <*? pC25>, <*? pC26>, <*? pC27>, <*? pC28>, <*? pC29>, <*? pC30>, <*? pC31>, <*? pC32>, <*? pC33>, <*? pC34>, <*? pC35>),BYTE,PROC
 QueryResult                                 FUNCTION (STRING pQuery),STRING
@@ -206,7 +209,9 @@ IgnoreTruncation                            PROCEDURE(BYTE pTrueFalse),STRING,PR
 MultipleActiveResultSets                    PROCEDURE(BYTE pTrueFalse),STRING,PROC
 SaveStoredProcedure                         PROCEDURE(BYTE pTrueFalse),STRING,PROC   
 TurboSQL                                    PROCEDURE(BYTE pTrueFalse),STRING,PROC
-VerifyViaSelect                             PROCEDURE(BYTE pTrueFalse),STRING,PROC      
+VerifyViaSelect                             PROCEDURE(BYTE pTrueFalse),STRING,PROC     
+
+SetAllConnectionStrings                     PROCEDURE(STRING pServer,STRING TheDatabase,STRING TheUserName,STRING ThePassword,BYTE IsTrusted)
 
                                         END    
 

@@ -20,11 +20,11 @@
 ! -----------------------------------------------------------------------
 UltimateString.Append PROCEDURE(STRING pNewValue)
   CODE
-  IF NOT SELF.Value &= NULL
-    SELF.Assign(CLIP(SELF.Value) & pNewValue)
-  ELSE
-    SELF.Assign(pNewValue)
-  END
+    IF NOT SELF.Value &= NULL
+        SELF.Assign(SELF.Value & pNewValue)
+    ELSE
+        SELF.Assign(pNewValue)
+    END
 
 ! -----------------------------------------------------------------------
 !!! <summary>Append value to the string class from an existing class</summary>
