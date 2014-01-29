@@ -1,4 +1,5 @@
 ! Commonly used Windows constants
+! items are prepended with api_ to avoid conflicts
 
 api_LPINITCOMMONCONTROLSEX GROUP,TYPE
 dwSize  LONG
